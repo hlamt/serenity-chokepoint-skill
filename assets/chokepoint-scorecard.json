@@ -1,5 +1,5 @@
 {
-  "schema_version": "0.1.0",
+  "schema_version": "0.2.0",
   "scale": {
     "min": 0,
     "max": 5,
@@ -7,43 +7,73 @@
   },
   "dimensions": {
     "demand_pressure": {
+      "name": "demand_pressure",
       "score": 0,
+      "score_range": [0, 5],
+      "polarity": "positive",
       "description": "Strength, persistence, and visibility of demand pressure."
     },
     "throughput_impact": {
+      "name": "throughput_impact",
       "score": 0,
+      "score_range": [0, 5],
+      "polarity": "positive",
       "description": "Degree to which the node limits defined system throughput."
     },
     "ccr_characteristics": {
+      "name": "ccr_characteristics",
       "score": 0,
+      "score_range": [0, 5],
+      "polarity": "positive",
       "description": "Evidence of capacity-constrained-resource behavior such as queues, allocation, or schedule control."
     },
     "substitution_difficulty": {
+      "name": "substitution_difficulty",
       "score": 0,
+      "score_range": [0, 5],
+      "polarity": "positive",
       "description": "Technical, qualification, switching-cost, ecosystem, or regulatory barriers to substitution."
     },
     "elevation_lead_time": {
+      "name": "elevation_lead_time",
       "score": 0,
+      "score_range": [0, 5],
+      "polarity": "positive",
       "description": "Time and uncertainty required to expand, debottleneck, qualify, or otherwise elevate supply."
     },
     "subordination_evidence": {
+      "name": "subordination_evidence",
       "score": 0,
+      "score_range": [0, 5],
+      "polarity": "positive",
       "description": "Evidence that upstream and downstream actors adapt plans, inventory, or schedules to this node."
     },
     "economic_capture": {
+      "name": "economic_capture",
       "score": 0,
+      "score_range": [0, 5],
+      "polarity": "positive",
       "description": "Ability of exposed suppliers to retain pricing, margin, volume, or strategic bargaining benefits."
     },
     "mispricing_potential": {
+      "name": "mispricing_potential",
       "score": 0,
+      "score_range": [0, 5],
+      "polarity": "positive",
       "description": "Evidence-based gap between operating implications and market expectations, after valuation risk."
     },
     "migration_risk": {
+      "name": "migration_risk",
       "score": 0,
+      "score_range": [0, 5],
+      "polarity": "negative",
       "description": "Risk that the constraint is released, bypassed, or migrates elsewhere; higher means greater risk."
     },
     "evidence_quality": {
+      "name": "evidence_quality",
       "score": 0,
+      "score_range": [0, 5],
+      "polarity": "positive",
       "description": "Recency, traceability, independence, and counterevidence resilience of the evidence set."
     }
   }

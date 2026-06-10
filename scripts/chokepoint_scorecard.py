@@ -24,8 +24,13 @@ def print_template(data: dict) -> None:
     print(f"Note: {scale['meaning']}")
     print()
     for name, item in data["dimensions"].items():
-        print(f"{name}: {item['description']}")
+        score_range = item["score_range"]
+        print(
+            f"{name} [{score_range[0]}-{score_range[1]}, {item['polarity']}]: "
+            f"{item['description']}"
+        )
     print()
+    print("Negative-polarity dimensions are risk items and must not be added directly to positive opportunity scores.")
     print(f"Source: {SCORECARD_PATH.relative_to(ROOT)}")
 
 

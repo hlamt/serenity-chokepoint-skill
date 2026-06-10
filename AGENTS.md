@@ -10,5 +10,6 @@
 8. Preserve an evidence chain, risk list, tracking indicators, and invalidation conditions in every investment-research conclusion.
 9. Output research hypotheses, not investment advice, trade instructions, or return promises.
 10. When changing README, SKILL.md, or references, prioritize user readability and effective GitHub presentation.
+11. Load only the references relevant to the current research question so the active context remains focused.
 
 Do not add real credentials, private research material, or unverifiable company claims. Keep examples hypothetical until public evidence is supplied and reviewed.

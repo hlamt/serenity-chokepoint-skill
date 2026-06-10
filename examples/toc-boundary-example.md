@@ -23,3 +23,9 @@
 3. 建立候选公司及其价值捕获证据。
 4. 寻找反证并跟踪制约释放和迁移。
 5. 写明假设失效条件和免责声明。
+
+## 证据链 Schema
+
+| evidence_id | claim | source_type | source_title | source_url | date | evidence_level | supports | contradicts | confidence | notes |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| E001 | 术语或卡点判断 |  |  | TBD |  | L0 |  |  | low | 示例占位，不代表真实证据 |

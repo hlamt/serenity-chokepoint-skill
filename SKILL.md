@@ -1,6 +1,7 @@
 ---
 name: serenity-chokepoint-skill
 description: Guide evidence-backed Serenity-style supply-chain chokepoint investment research. Use when an investment researcher or industry-chain analyst needs to map a value chain, define throughput, identify candidate chokepoints and companies, distinguish structural constraints from shortages or hype, apply TOC-informed terminology guardrails, build a traceable evidence plan, and state risks, tracking indicators, and invalidation conditions.
+version: 0.2.0
 ---
 
 # Purpose
@@ -59,10 +60,10 @@ Return these sections in order:
 
 1. 研究问题
 2. 产业价值链
-3. 有效产出
+3. 有效产出定义
 4. 候选供应链卡点
 5. 候选公司
-6. 证据表
+6. 证据链
 7. 反证与风险
 8. 跟踪指标
 9. 假设失效条件
@@ -98,4 +99,4 @@ Use public information only. Public information may be delayed, incomplete, or w
 - Use [assets/toc-boundary-checklist.md](assets/toc-boundary-checklist.md) before finalizing terminology.
 - Use [references/risk-and-compliance.md](references/risk-and-compliance.md) for risk checks.
 
-Project version: 0.1.0.
+Project version: 0.2.0.
