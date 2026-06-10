@@ -1,0 +1,1366 @@
+diff --git a/AGENTS.md b/AGENTS.md
+index af32e1f..cebc1f3 100644
+--- a/AGENTS.md
++++ b/AGENTS.md
+@@ -10,5 +10,6 @@
+ 8. Preserve an evidence chain, risk list, tracking indicators, and invalidation conditions in every investment-research conclusion.
+ 9. Output research hypotheses, not investment advice, trade instructions, or return promises.
+ 10. When changing README, SKILL.md, or references, prioritize user readability and effective GitHub presentation.
++11. Load only the references relevant to the current research question so the active context remains focused.
+ 
+ Do not add real credentials, private research material, or unverifiable company claims. Keep examples hypothetical until public evidence is supplied and reviewed.
+diff --git a/CONTRIBUTING.md b/CONTRIBUTING.md
+index f94c7b9..bed4227 100644
+--- a/CONTRIBUTING.md
++++ b/CONTRIBUTING.md
+@@ -17,7 +17,7 @@ Useful contributions include:
+ 1. Keep conclusions traceable to public sources and include dates.
+ 2. Separate facts, source claims, project inferences, and open questions.
+ 3. Include counterevidence, risks, tracking indicators, and invalidation conditions.
+-4. Run `python scripts/validate_skill.py` before submitting changes.
++4. Run `python3 scripts/validate_skill.py` before submitting changes.
+ 5. Keep scope narrow and explain terminology changes.
+ 
+ The project does not accept stock trade recommendations, return promises, non-public information, unauthorized content, personality simulation, or conclusions without traceable evidence.
+diff --git a/README.en.md b/README.en.md
+index 1cc55dc..48cea41 100644
+--- a/README.en.md
++++ b/README.en.md
+@@ -22,11 +22,11 @@ Do not automatically translate Chokepoint Theory as “瓶颈理论”. Default
+ For Agent Skills-compatible clients:
+ 
+ ```bash
+-git clone https://github.com/<your-org>/serenity-chokepoint-skill.git
+-python scripts/validate_skill.py
++git clone https://github.com/hlamt/serenity-chokepoint-skill.git
++python3 scripts/validate_skill.py
+ ```
+ 
+-Use the repository as a Skill directory, ask the Agent to read `SKILL.md`, load relevant files from `references/` as needed, and reuse prompts from `assets/research-prompt-pack.md`. Compatibility is client-dependent.
++Use the repository as a Skill directory, ask the Agent to read `SKILL.md`, load relevant files from `references/`, and reuse prompts from `assets/research-prompt-pack.md`. It is intended for clients that support Agent Skills; loading details depend on the client.
+ 
+ ## Output Format
+ 
+@@ -35,7 +35,7 @@ Use the repository as a Skill directory, ask the Agent to read `SKILL.md`, load
+ 3. Throughput definition
+ 4. Candidate supply-chain chokepoints
+ 5. Candidate companies
+-6. Evidence table
++6. Evidence chain
+ 7. Counterevidence and risks
+ 8. Tracking indicators
+ 9. Invalidation conditions
+@@ -43,4 +43,4 @@ Use the repository as a Skill directory, ask the Agent to read `SKILL.md`, load
+ 
+ ## Disclaimer
+ 
+-This independent project is not officially authorized by Serenity and is not TOC certification or personality simulation. It uses public information for research and methodology learning. It does not provide investment advice, return promises, or individualized asset allocation. Users bear their own investment risk, and public information may be delayed, incomplete, or wrong.
++Outputs are research hypotheses, not investment advice. Public information may be delayed, incomplete, or wrong. See [DISCLAIMER.md](DISCLAIMER.md) for the full boundary.
+diff --git a/README.zh-CN.md b/README.zh-CN.md
+index 2864e0a..d854d46 100644
+--- a/README.zh-CN.md
++++ b/README.zh-CN.md
+@@ -31,23 +31,23 @@ Chokepoint Theory 关注供应链中的关键卡点与价值捕获，不宜自
+ ### Agent Skills-compatible clients
+ 
+ ```bash
+-git clone https://github.com/<your-org>/serenity-chokepoint-skill.git
++git clone https://github.com/hlamt/serenity-chokepoint-skill.git
+ ```
+ 
+ 1. 将仓库作为 Skill 目录使用。
+ 2. 让 Agent 首先读取 `SKILL.md`。
+-3. 根据问题按需读取 `references/`，不要一次加载全部资料。
++3. 根据研究问题读取 `references/` 中的相关资料。
+ 4. 使用 `assets/research-prompt-pack.md` 中的 Prompt，或套用 `assets/thesis-template.md`。
+-5. 运行本地校验：`python scripts/validate_skill.py`。
++5. 运行本地校验：`python3 scripts/validate_skill.py`。
+ 
+-不同客户端的 Skill 加载方式可能不同；本项目只声明面向 Agent Skills-compatible clients，不承诺自动兼容所有客户端。
++适用于支持 Agent Skills 的客户端；具体加载方式依客户端而定。
+ 
+ ## 可复制 Prompt
+ 
+ ```text
+ 请对【产业主题】进行供应链卡点投研。先定义产业价值链与有效产出，再识别候选供应链卡点，并用 TOC-informed CCR 检查其对系统有效产出的影响、短期替代难度、扩产周期与制约迁移风险。
+ 
+-请输出：候选供应链卡点、候选公司类型或公司池、证据链与待验证事项、验证路径、风险清单、跟踪指标、假设失效条件和免责声明。区分事实、推断与待验证问题；不要把 Chokepoint Theory 自动等同于 TOC 意义上的“瓶颈理论”；不要给出确定性投资结论。
++请严格按十段输出：研究问题、产业价值链、有效产出定义、候选供应链卡点、候选公司、证据链、反证与风险、跟踪指标、假设失效条件、免责声明。区分事实、推断与待验证问题；不要把 Chokepoint Theory 自动等同于 TOC 意义上的“瓶颈理论”；不要给出确定性投资结论。
+ ```
+ 
+ 更多场景见 [assets/research-prompt-pack.md](assets/research-prompt-pack.md)。
+@@ -58,8 +58,11 @@ git clone https://github.com/<your-org>/serenity-chokepoint-skill.git
+ # 研究问题
+ 要验证的产业主题、时间范围与系统边界。
+ 
+-# 产业价值链与有效产出
+-列出关键环节，并说明系统真正要提升的有效产出。
++# 产业价值链
++列出关键环节、上下游依赖和研究边界。
++
++# 有效产出定义
++说明系统真正要提升的可交付价值及衡量方式。
+ 
+ # 候选供应链卡点
+ 逐项说明影响、CCR 特征、替代难度、扩产周期与置信度。
+@@ -67,14 +70,17 @@ git clone https://github.com/<your-org>/serenity-chokepoint-skill.git
+ # 候选公司
+ 只形成候选池；说明暴露度、价值捕获逻辑和待验证证据。
+ 
+-# 证据表
+-记录来源、日期、证据等级、支持或反证关系。
++# 证据链
++使用统一证据表记录来源、日期、证据等级、支持与反证关系。
+ 
+ # 反证与风险
+ 列出替代、扩产、需求回落、估值、政策及制约迁移风险。
+ 
+-# 跟踪指标与假设失效条件
+-给出可观察指标、频率、阈值以及明确的失效信号。
++# 跟踪指标
++给出可观察指标、更新频率和预警阈值。
++
++# 假设失效条件
++给出能够推翻机制、持续性或价值捕获判断的信号。
+ 
+ # 免责声明
+ 本输出是研究假设，不构成投资建议。
+@@ -97,12 +103,12 @@ docs/          项目 SoT、蒸馏规则与开发流程
+ ## 本地校验
+ 
+ ```bash
+-python scripts/validate_skill.py
+-python scripts/chokepoint_scorecard.py --template
++python3 scripts/validate_skill.py
++python3 scripts/chokepoint_scorecard.py --template
+ ```
+ 
+ 校验只读取本仓库文件，不联网、不读取 cookie，也不需要任何 API key。
+ 
+ ## 免责声明
+ 
+-本项目非 Serenity 官方授权，非 TOC 官方认证，也不进行人格模拟。所有输出仅用于公开资料研究与方法论学习，属于研究假设，不构成投资建议、收益承诺或个性化资产配置建议。公开资料可能滞后、不完整或存在错误，用户应独立判断并自行承担投资风险。详见 [DISCLAIMER.md](DISCLAIMER.md)。
++本项目输出研究假设，不构成投资建议。公开资料可能滞后、不完整或存在错误，详见 [DISCLAIMER.md](DISCLAIMER.md)。
+diff --git a/SECURITY.md b/SECURITY.md
+index 17b9bb4..0548f03 100644
+--- a/SECURITY.md
++++ b/SECURITY.md
+@@ -11,6 +11,6 @@ This repository is designed for public-information research. Do not submit or st
+ 
+ ## Reporting a Leak
+ 
+-Do not open a public issue containing sensitive material. Use GitHub Security Advisories when enabled, or contact `security@example.invalid` as a placeholder until the maintainers publish a real security address. Describe the affected path without reproducing the secret.
++Do not open a public issue containing sensitive material. Use this repository's GitHub Security Advisories when available. If private reporting is unavailable, open an issue or discussion containing no secret material and ask the maintainers to provide a private reporting channel.
+ 
+ If a leak is found, stop using the credential, revoke or rotate it through the relevant provider, remove it from working files and history using an approved process, and document only the remediation outcome.
+diff --git a/SKILL.md b/SKILL.md
+index bdeb476..adea1e4 100644
+--- a/SKILL.md
++++ b/SKILL.md
+@@ -1,6 +1,7 @@
+ ---
+ name: serenity-chokepoint-skill
+ description: Guide evidence-backed Serenity-style supply-chain chokepoint investment research. Use when an investment researcher or industry-chain analyst needs to map a value chain, define throughput, identify candidate chokepoints and companies, distinguish structural constraints from shortages or hype, apply TOC-informed terminology guardrails, build a traceable evidence plan, and state risks, tracking indicators, and invalidation conditions.
++version: 0.2.0
+ ---
+ 
+ # Purpose
+@@ -59,10 +60,10 @@ Return these sections in order:
+ 
+ 1. 研究问题
+ 2. 产业价值链
+-3. 有效产出
++3. 有效产出定义
+ 4. 候选供应链卡点
+ 5. 候选公司
+-6. 证据表
++6. 证据链
+ 7. 反证与风险
+ 8. 跟踪指标
+ 9. 假设失效条件
+@@ -98,4 +99,4 @@ Use public information only. Public information may be delayed, incomplete, or w
+ - Use [assets/toc-boundary-checklist.md](assets/toc-boundary-checklist.md) before finalizing terminology.
+ - Use [references/risk-and-compliance.md](references/risk-and-compliance.md) for risk checks.
+ 
+-Project version: 0.1.0.
++Project version: 0.2.0.
+diff --git a/assets/chokepoint-scorecard.json b/assets/chokepoint-scorecard.json
+index 71e452a..0617572 100644
+--- a/assets/chokepoint-scorecard.json
++++ b/assets/chokepoint-scorecard.json
+@@ -1,5 +1,5 @@
+ {
+-  "schema_version": "0.1.0",
++  "schema_version": "0.2.0",
+   "scale": {
+     "min": 0,
+     "max": 5,
+@@ -7,43 +7,73 @@
+   },
+   "dimensions": {
+     "demand_pressure": {
++      "name": "demand_pressure",
+       "score": 0,
++      "score_range": [0, 5],
++      "polarity": "positive",
+       "description": "Strength, persistence, and visibility of demand pressure."
+     },
+     "throughput_impact": {
++      "name": "throughput_impact",
+       "score": 0,
++      "score_range": [0, 5],
++      "polarity": "positive",
+       "description": "Degree to which the node limits defined system throughput."
+     },
+     "ccr_characteristics": {
++      "name": "ccr_characteristics",
+       "score": 0,
++      "score_range": [0, 5],
++      "polarity": "positive",
+       "description": "Evidence of capacity-constrained-resource behavior such as queues, allocation, or schedule control."
+     },
+     "substitution_difficulty": {
++      "name": "substitution_difficulty",
+       "score": 0,
++      "score_range": [0, 5],
++      "polarity": "positive",
+       "description": "Technical, qualification, switching-cost, ecosystem, or regulatory barriers to substitution."
+     },
+     "elevation_lead_time": {
++      "name": "elevation_lead_time",
+       "score": 0,
++      "score_range": [0, 5],
++      "polarity": "positive",
+       "description": "Time and uncertainty required to expand, debottleneck, qualify, or otherwise elevate supply."
+     },
+     "subordination_evidence": {
++      "name": "subordination_evidence",
+       "score": 0,
++      "score_range": [0, 5],
++      "polarity": "positive",
+       "description": "Evidence that upstream and downstream actors adapt plans, inventory, or schedules to this node."
+     },
+     "economic_capture": {
++      "name": "economic_capture",
+       "score": 0,
++      "score_range": [0, 5],
++      "polarity": "positive",
+       "description": "Ability of exposed suppliers to retain pricing, margin, volume, or strategic bargaining benefits."
+     },
+     "mispricing_potential": {
++      "name": "mispricing_potential",
+       "score": 0,
++      "score_range": [0, 5],
++      "polarity": "positive",
+       "description": "Evidence-based gap between operating implications and market expectations, after valuation risk."
+     },
+     "migration_risk": {
++      "name": "migration_risk",
+       "score": 0,
++      "score_range": [0, 5],
++      "polarity": "negative",
+       "description": "Risk that the constraint is released, bypassed, or migrates elsewhere; higher means greater risk."
+     },
+     "evidence_quality": {
++      "name": "evidence_quality",
+       "score": 0,
++      "score_range": [0, 5],
++      "polarity": "positive",
+       "description": "Recency, traceability, independence, and counterevidence resilience of the evidence set."
+     }
+   }
+diff --git a/assets/evidence-table-template.md b/assets/evidence-table-template.md
+index 08ab459..3e2a741 100644
+--- a/assets/evidence-table-template.md
++++ b/assets/evidence-table-template.md
+@@ -1,7 +1,7 @@
+ # Evidence Table Template
+ 
+-| evidence_id | claim | source | source_url | evidence_level | confidence | notes |
+-| --- | --- | --- | --- | --- | --- | --- |
+-|  |  |  |  |  |  |  |
++| evidence_id | claim | source_type | source_title | source_url | date | evidence_level | supports | contradicts | confidence | notes |
++| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
++| E001 |  |  |  | TBD |  |  |  |  |  |  |
+ 
+-Record the source date in `notes` or extend the table with a dedicated `date` column. State whether each item supports, contradicts, or only contextualizes the claim.
++Use `L0`-`L5` for `evidence_level` and `low` / `medium` / `high` for `confidence`. If no public URL is available, set `source_url` to `TBD` and record a traceable document locator in `notes`.
+diff --git a/assets/research-prompt-pack.md b/assets/research-prompt-pack.md
+index 95626ed..03ba3f3 100644
+--- a/assets/research-prompt-pack.md
++++ b/assets/research-prompt-pack.md
+@@ -2,21 +2,26 @@
+ 
+ These prompts produce research hypotheses, not investment conclusions. Replace bracketed fields and require dated, traceable public evidence.
+ 
++每个 Prompt 都必须严格按以下十段输出，不得合并章节：研究问题、产业价值链、有效产出定义、候选供应链卡点、候选公司、证据链、反证与风险、跟踪指标、假设失效条件、免责声明。
++
+ ## 1. A 股 AI 半导体供应链卡点投研
+ 
+ ```text
+ 请以【研究日期】为截止日，对 A 股 AI 半导体产业链进行供应链卡点投研。先定义研究边界、产业价值链与有效产出，再识别可能影响系统交付的候选供应链卡点。使用 TOC-informed CCR 检查，但不要把 Chokepoint Theory 自动等同于 TOC / 制约理论。
+ 
+-请区分事实、来源中的观点、项目推断与待验证问题，并输出：
+-1. 候选供应链卡点及其吞吐影响、替代难度和扩产周期；
+-2. 候选公司或公司类型，以及与卡点的暴露路径；
+-3. 证据链、证据等级、来源日期与验证路径；
+-4. 反证和风险清单，包括估值、替代、扩产、客户压价与制约迁移；
+-5. 可持续跟踪的价格、产能、交期、良率、认证、订单和库存指标；
+-6. 可明确推翻研究假设的失效条件；
+-7. 非投资建议免责声明。
+-
+-没有公开证据支持的内容必须标为假设，不得形成确定性公司结论。
++请严格分为十段输出：
++1. 研究问题；
++2. 产业价值链；
++3. 有效产出定义；
++4. 候选供应链卡点；
++5. 候选公司；
++6. 证据链；
++7. 反证与风险（形成风险清单）；
++8. 跟踪指标；
++9. 假设失效条件；
++10. 免责声明。
++
++候选公司只作为待验证研究池。证据链须记录来源标题、日期、证据等级、支持与反证关系；没有公开证据支持的内容必须标为假设。
+ ```
+ 
+ ## 2. AI 基建供应链卡点分析
+@@ -24,7 +29,19 @@ These prompts produce research hypotheses, not investment conclusions. Replace b
+ ```text
+ 请拆解【AI 基建范围，例如数据中心电力、网络、服务器、散热或建设交付】的价值链，定义系统目标与有效产出，并识别当前候选供应链卡点。判断每个候选项是结构性卡点、潜在 CCR、局部瓶颈、短期短缺还是热门叙事。
+ 
+-请输出：候选供应链卡点、候选公司或公司类型、价值捕获机制、证据链与待验证资料、风险清单、跟踪指标、制约释放和迁移路径、假设失效条件及免责声明。所有关键判断附日期和公开来源；缺失信息列为研究任务，不补造数据。
++请严格分为十段输出：
++1. 研究问题；
++2. 产业价值链；
++3. 有效产出定义；
++4. 候选供应链卡点；
++5. 候选公司；
++6. 证据链；
++7. 反证与风险（形成风险清单）；
++8. 跟踪指标；
++9. 假设失效条件；
++10. 免责声明。
++
++说明价值捕获机制、制约释放和迁移路径。所有关键判断附日期和公开来源；缺失信息列为研究任务，不补造数据。
+ ```
+ 
+ ## 3. 判断某环节是真卡点还是短期短缺
+@@ -32,25 +49,57 @@ These prompts produce research hypotheses, not investment conclusions. Replace b
+ ```text
+ 请评估【环节或产品】是真正的供应链卡点，还是短期短缺、local bottleneck 或市场叙事。先说明产业价值链边界、系统目标和有效产出，再检查需求持续性、吞吐影响、CCR 特征、替代难度、认证壁垒、扩产周期、库存、价格与交期。
+ 
+-请输出：分类结论及置信度、候选供应链卡点、受益或受损的候选公司类型、支持与反证证据链、仍需验证的路径、风险清单、跟踪指标、假设失效条件和免责声明。结论必须保留研究假设属性。
++请严格分为十段输出：
++1. 研究问题；
++2. 产业价值链；
++3. 有效产出定义；
++4. 候选供应链卡点；
++5. 候选公司；
++6. 证据链；
++7. 反证与风险（形成风险清单）；
++8. 跟踪指标；
++9. 假设失效条件；
++10. 免责声明。
++
++在候选供应链卡点部分给出分类和置信度，在证据链中同时记录支持与反证。结论必须保留研究假设属性。
+ ```
+ 
+ ## 4. 用 TOC-informed 检查校准投研假设
+ 
+ ```text
+-请对以下投研假设执行 TOC-informed 校准：【粘贴假设】。
+-
+-依次检查系统边界、系统目标、有效产出、候选 CCR、吞吐影响、短期替代难度、制约利用与扩张、上下游从属关系、制约释放和制约迁移。指出原假设把局部繁忙、短期短缺或供应链卡点误写为 TOC-style constraint 的地方。
+-
+-请输出：校准后的候选供应链卡点、候选公司或公司类型、证据链和证据缺口、验证路径、风险清单、跟踪指标、假设失效条件和免责声明。不要因术语校准而跳过用户真正需要的产业研究。
++请对以下投研假设执行 TOC-informed 校准：【粘贴假设】。依次检查系统边界、系统目标、有效产出、候选 CCR、吞吐影响、短期替代难度、制约利用与扩张、上下游从属关系、制约释放和制约迁移。
++
++请严格分为十段输出：
++1. 研究问题；
++2. 产业价值链；
++3. 有效产出定义；
++4. 候选供应链卡点；
++5. 候选公司；
++6. 证据链；
++7. 反证与风险（形成风险清单）；
++8. 跟踪指标；
++9. 假设失效条件；
++10. 免责声明。
++
++指出原假设把局部繁忙、短期短缺或供应链卡点误写为 TOC-style constraint 的地方，但不要因术语校准而跳过产业研究。
+ ```
+ 
+ ## 5. 检查中文文章中的术语误读
+ 
+ ```text
+-请分析以下中文文章是否把 Chokepoint Theory 简化误读为 TOC 意义上的“瓶颈理论”：【粘贴文章或公开来源】。
+-
+-逐段区分 supply-chain chokepoint、local bottleneck、TOC-style constraint、CCR、短期短缺、热门叙事与普通“卡脖子”概念。分别标注作者原始表达、可验证事实、你的术语校准与仍需查证之处。
+-
+-在完成术语分析后，继续输出该文章涉及的候选供应链卡点、候选公司或公司类型、证据链、验证路径、风险清单、跟踪指标、假设失效条件和免责声明。不得把文章观点直接转成确定性投资结论。
++请分析以下中文文章是否把 Chokepoint Theory 简化误读为 TOC 意义上的“瓶颈理论”：【粘贴文章或公开来源】。逐段区分 supply-chain chokepoint、local bottleneck、TOC-style constraint、CCR、短期短缺、热门叙事与普通“卡脖子”概念。
++
++请严格分为十段输出：
++1. 研究问题；
++2. 产业价值链；
++3. 有效产出定义；
++4. 候选供应链卡点；
++5. 候选公司；
++6. 证据链；
++7. 反证与风险（形成风险清单）；
++8. 跟踪指标；
++9. 假设失效条件；
++10. 免责声明。
++
++分别标注作者原始表达、可验证事实、术语校准与仍需查证之处。不得把文章观点直接转成确定性投资结论。
+ ```
+diff --git a/assets/thesis-template.md b/assets/thesis-template.md
+index a9f0eaf..c241cda 100644
+--- a/assets/thesis-template.md
++++ b/assets/thesis-template.md
+@@ -1,6 +1,6 @@
+ # Supply-Chain Chokepoint Thesis Template
+ 
+-## 1. 投研主题
++## 1. 研究问题
+ 
+ - 主题：
+ - 研究日期：
+@@ -20,7 +20,7 @@
+ - 有效产出：
+ - 衡量单位与频率：
+ 
+-## 4. 候选卡点
++## 4. 候选供应链卡点
+ 
+ | 候选卡点 | 吞吐影响 | CCR 特征 | 替代难度 | 扩张周期 | 当前置信度 |
+ | --- | --- | --- | --- | --- | --- |
+@@ -34,16 +34,16 @@
+ 
+ ## 6. 证据链
+ 
+-使用 `assets/evidence-table-template.md`。区分支持、反证、日期、证据等级与来源独立性。
++| evidence_id | claim | source_type | source_title | source_url | date | evidence_level | supports | contradicts | confidence | notes |
++| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
++| E001 |  |  |  | TBD |  |  |  |  |  |  |
+ 
+-## 7. 反证
++## 7. 反证与风险
+ 
+ - 替代解释：
+ - 与假设冲突的数据：
+ - 仍未解决的问题：
+ 
+-## 8. 风险
+-
+ - 需求与库存：
+ - 供给扩张与替代：
+ - 客户议价与价值捕获：
+@@ -51,18 +51,18 @@
+ - 政策与监管：
+ - 制约迁移：
+ 
+-## 9. 跟踪指标
++## 8. 跟踪指标
+ 
+ | 指标 | 当前基线 | 数据来源 | 更新频率 | 预警阈值 | 对应假设 |
+ | --- | --- | --- | --- | --- | --- |
+ |  |  |  |  |  |  |
+ 
+-## 10. 假设失效条件
++## 9. 假设失效条件
+ 
+ | 失效条件 | 可观察信号 | 判断窗口 | 触发后的研究动作 |
+ | --- | --- | --- | --- |
+ |  |  |  |  |
+ 
+-## Disclaimer
++## 10. 免责声明
+ 
+ 本模板及其输出仅用于公开资料研究和方法论学习，属于研究假设，不构成投资建议。
+diff --git a/docs/development-workflow.md b/docs/development-workflow.md
+index 2577ba6..17c38d5 100644
+--- a/docs/development-workflow.md
++++ b/docs/development-workflow.md
+@@ -9,23 +9,9 @@ Every authorization upgrade requires explicit user approval.
+ | L2 | 联网抓取 | Access websites, APIs, repositories, X, or external data |
+ | L3 | commit | Create a git commit or perform related publishing actions |
+ 
+-## Current Authorization
++## Authorization Rule
+ 
+-Current level: **L1 local modification only**.
+-
+-Allowed:
+-
+-- Create the requested project skeleton and documentation.
+-- Run local scripts that operate only on repository files.
+-- Inspect git status and local file structure.
+-
+-Not allowed without a new explicit authorization:
+-
+-- Network access or external repository lookup.
+-- X scraping or cookie/session access.
+-- LLM or external API calls from project scripts.
+-- Reading or writing secrets.
+-- Git commit, push, release, or publication.
++每轮任务必须在用户明确授权的级别内执行；授权级别随任务而定，不在文档中固定当前状态。超出当轮授权范围的联网、抓取、凭据访问、提交或发布操作，必须先获得新的明确授权。
+ 
+ ## Change Loop
+ 
+diff --git a/evals/test-cases.md b/evals/test-cases.md
+index 01cd30f..f822026 100644
+--- a/evals/test-cases.md
++++ b/evals/test-cases.md
+@@ -2,6 +2,19 @@
+ 
+ For every case, assess terminology, workflow completeness, evidence discipline, risk disclosure, and absence of deterministic investment conclusions.
+ 
++Every generated research response must keep these ten sections separate:
++
++1. 研究问题
++2. 产业价值链
++3. 有效产出定义
++4. 候选供应链卡点
++5. 候选公司
++6. 证据链
++7. 反证与风险
++8. 跟踪指标
++9. 假设失效条件
++10. 免责声明
++
+ ## 1. A 股 AI 半导体供应链卡点分析
+ 
+ Prompt: Map the value chain, define throughput, identify candidate chokepoints and company types, and build an evidence and monitoring plan.
+@@ -27,5 +40,6 @@ Prompt: Turn a candidate chokepoint into a dated evidence table, counterevidence
+ - Uses “供应链卡点 / 卡点理论 / 供应链卡点分析” by default.
+ - Treats TOC as a calibration framework.
+ - Returns all required output sections.
++- Uses the unified evidence schema: `evidence_id`, `claim`, `source_type`, `source_title`, `source_url`, `date`, `evidence_level`, `supports`, `contradicts`, `confidence`, and `notes`.
+ - Labels missing evidence and confidence.
+ - Includes a non-investment-advice disclaimer.
+diff --git a/examples/a-share-semiconductor-example.md b/examples/a-share-semiconductor-example.md
+index c6e55e3..8dabefb 100644
+--- a/examples/a-share-semiconductor-example.md
++++ b/examples/a-share-semiconductor-example.md
+@@ -1,46 +1,53 @@
+ # A 股 AI 半导体供应链卡点示例骨架
+ 
+-> 本示例不包含真实公司结论，仅展示研究结构。
++> 本示例不包含真实公司结论，仅展示统一十段输出结构。
+ 
+ ## 1. 研究问题
+ 
+-在【研究日期】和【产品边界】下，哪些环节可能限制 AI 半导体产业链的有效交付？这些环节是否具备持续的供应链卡点特征？
++在【研究日期】和【产品边界】下，哪些环节可能限制 AI 半导体产业链的有效交付？
+ 
+ ## 2. 产业价值链
+ 
+-按需求定义、芯片设计、制造、封装测试、关键设备与材料、系统集成和终端交付拆解。明确研究边界，避免把所有上游环节都列为卡点。
++按需求定义、芯片设计、制造、封装测试、关键设备与材料、系统集成和终端交付拆解，并标明研究边界。
+ 
+-## 3. 候选供应链卡点
++## 3. 有效产出定义
+ 
+-| 环节占位 | 可能的吞吐影响 | 需要检查的 CCR 特征 | 当前状态 |
+-| --- | --- | --- | --- |
+-| 候选环节 A | 是否影响合格产品交付 | 排队、良率、交期、投料从属 | 待验证 |
+-| 候选环节 B | 是否影响系统集成速度 | 认证、替代、扩产周期 | 待验证 |
++- 系统目标：待定义。
++- 有效产出：符合目标性能、良率与交付时间的可用产品或系统能力。
++- 衡量方式：待验证。
++
++## 4. 候选供应链卡点
++
++| 候选环节 | 吞吐影响 | CCR 特征 | 替代难度 | 扩产周期 | 置信度 |
++| --- | --- | --- | --- | --- | --- |
++| 虚拟环节 A | 待验证 | 排队、良率、交期 | 待验证 | 待验证 | low |
+ 
+-## 4. 候选公司类型
++## 5. 候选公司
+ 
+-- 控制关键设备、材料或工艺能力的供应商。
+-- 已通过关键客户认证且替代周期较长的供应商。
+-- 能将稀缺转化为真实订单、价格或利润的供应商。
++| 公司或类型 | 暴露路径 | 价值捕获机制 | 待验证证据 |
++| --- | --- | --- | --- |
++| 虚拟公司类型 A | 关键设备、材料或工艺能力 | 订单、价格或利润改善 | 产品收入、产能、认证、客户 |
++
++## 6. 证据链
+ 
+-不根据概念关联直接形成公司结论。
++| evidence_id | claim | source_type | source_title | source_url | date | evidence_level | supports | contradicts | confidence | notes |
++| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
++| E001 | 候选环节可能影响有效交付 |  |  | TBD |  | L0 | 待验证判断 |  | low | 示例占位，不代表真实证据 |
+ 
+-## 5. 需要验证的证据
++## 7. 反证与风险
+ 
+-- 公司公告、财报与招股书中的产品结构、产能和客户验证。
+-- 订单、交付、良率、产能利用率与扩产进度。
+-- 多源价格、交期、库存和客户替代信息。
+-- 反证：需求放缓、快速扩产、技术替代、客户压价或制约迁移。
++需求放缓、快速扩产、技术替代、客户压价、估值已反映、口径不一致和制约迁移。
+ 
+-## 6. 风险与反证
++## 8. 跟踪指标
+ 
+-估值已反映、行业数据重复引用、订单口径不一致、客户集中、资本开支波动、政策变化和替代路线。
++价格、交期、库存、产能、良率、认证进度、订单兑现与客户集中度。
+ 
+-## 7. 假设失效条件
++## 9. 假设失效条件
+ 
+-- 交期和价格恢复正常，但系统有效产出未改善。
+ - 替代方案快速通过认证并达到可比良率。
+-- 新产能按期释放且供需缺口持续收窄。
++- 新产能释放后供需缺口持续收窄。
+ - 候选公司无法保留价格、份额或利润改善。
+ 
+-本示例仅用于方法论学习，不构成投资建议。
++## 10. 免责声明
++
++本示例仅用于方法论学习，属于研究假设，不构成投资建议。
+diff --git a/examples/ai-infrastructure-chokepoint-example.md b/examples/ai-infrastructure-chokepoint-example.md
+index b02aff2..56023fd 100644
+--- a/examples/ai-infrastructure-chokepoint-example.md
++++ b/examples/ai-infrastructure-chokepoint-example.md
+@@ -2,37 +2,48 @@
+ 
+ > 本示例使用虚拟环节，不代表真实产业结论。
+ 
+-## 研究问题
++## 1. 研究问题
+ 
+-对于【指定地区】的【AI 基建范围】，什么因素限制可按期投入运营的有效算力，而不只是限制某个设备的名义出货？
++对于【指定地区】的【AI 基建范围】，什么因素限制可按期投入运营的有效算力？
+ 
+-## 产业价值链与有效产出
++## 2. 产业价值链
+ 
+-价值链可拆为场址与许可、电力接入、建设、服务器、网络、散热、软件部署和运营。有效产出示例为“在目标功耗、可靠性和网络条件下可持续交付的算力”，最终定义应匹配用户问题。
++场址与许可 → 电力接入 → 建设施工 → 服务器与加速器 → 网络 → 散热 → 软件部署 → 运营。
+ 
+-## 候选供应链卡点
++## 3. 有效产出定义
+ 
+-| 虚拟候选项 | 结构性问题 | 短期短缺解释 | 需验证数据 |
++在目标功耗、可靠性和网络条件下，按期上线并可持续使用的算力，而非单一设备的名义出货量。
++
++## 4. 候选供应链卡点
++
++| 候选环节 | 结构性解释 | 短期短缺解释 | 需验证数据 |
++| --- | --- | --- | --- |
++| 虚拟环节 A | 认证或建设周期长 | 项目排期集中 | 交期、在建产能、审批 |
++
++## 5. 候选公司
++
++| 公司或类型 | 暴露路径 | 价值捕获机制 | 待验证证据 |
+ | --- | --- | --- | --- |
+-| 环节 A | 认证或建设周期长 | 项目排期集中 | 交期、在建产能、审批 |
+-| 环节 B | 替代设计成本高 | 渠道库存错配 | 配置、价格、库存、客户验证 |
++| 虚拟公司类型 A | 认证、交付或服务能力 | 订单、价格、份额或服务收入 | 公告、订单、毛利、产能、客户 |
++
++## 6. 证据链
+ 
+-## TOC-Informed 检查
++| evidence_id | claim | source_type | source_title | source_url | date | evidence_level | supports | contradicts | confidence | notes |
++| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
++| E001 | 候选环节可能限制有效算力交付 |  |  | TBD |  | L0 | 待验证判断 |  | low | 示例占位，不代表真实证据 |
+ 
+-确认系统目标、有效产出和边界后，检查候选项是否控制整体交付节拍。高利用率或涨价本身不足以证明它是 TOC-style constraint。
++## 7. 反证与风险
+ 
+-## 候选公司与价值捕获
++需求延后、供给快速扩张、替代架构、客户议价、项目取消、政策变化、估值已反映和制约迁移。
+ 
+-只描述公司类型、暴露路径和待验证机制，例如认证地位、交付能力、服务收入或议价结构。需要公司公告、订单、毛利、资本开支和客户数据支持。
++## 8. 跟踪指标
+ 
+-## 证据、风险与跟踪
++项目开工与投运、电力批复、设备交期、库存、价格、产能、认证和订单兑现。
+ 
+-- 证据：监管文件、项目公告、公司报告、招投标、价格、交期和产能。
+-- 风险：需求延后、并网或建设瓶颈迁移、替代架构、扩产、客户议价和估值。
+-- 跟踪：项目开工与投运、电力批复、设备交期、库存、价格、产能和认证。
++## 9. 假设失效条件
+ 
+-## 假设失效条件
++候选环节不再影响有效算力交付、供应快速释放、替代方案成熟，或候选公司无法捕获价值。
+ 
+-当候选环节不再影响有效算力交付、供应快速释放、替代方案成熟，或价值无法由候选公司捕获时，原假设失效或需要降级。
++## 10. 免责声明
+ 
+-本示例仅用于公开资料研究，不构成投资建议。
++本示例仅用于公开资料研究，属于研究假设，不构成投资建议。
+diff --git a/examples/demo-conversation.md b/examples/demo-conversation.md
+index e4f3281..5cebbac 100644
+--- a/examples/demo-conversation.md
++++ b/examples/demo-conversation.md
+@@ -6,44 +6,50 @@
+ 
+ ## Skill 的术语校准
+ 
+-这里若指 Serenity 语境中的 Chokepoint Theory，更准确地说是供应链卡点分析；它不等同于 TOC / 制约理论。TOC 可用于定义系统目标、有效产出和关键制约资源。下面继续完成产业研究，但候选公司只作为待验证研究池。
++这里若指 Serenity 语境中的 Chokepoint Theory，更准确地说是供应链卡点分析；它不等同于 TOC / 制约理论。TOC 可用于定义系统目标、有效产出和关键制约资源。候选公司只作为待验证研究池。
+ 
+-## 产业链拆解
++## 1. 研究问题
++
++哪些 AI 基建环节可能限制可运营算力交付，并具备持续的供应链卡点特征？
++
++## 2. 产业价值链
+ 
+ 场址与许可 → 电力接入 → 数据中心建设 → 服务器与加速器 → 网络 → 散热 → 软件部署 → 可运营算力。
+ 
+-有效产出应定义为在目标可靠性、功耗和网络条件下按期上线并可持续使用的算力，而非单一设备出货量。
++## 3. 有效产出定义
+ 
+-## 候选卡点
++在目标可靠性、功耗和网络条件下按期上线并可持续使用的算力。
+ 
+-| 候选环节 | 为什么可能限制有效产出 | 当前判断 |
++## 4. 候选供应链卡点
++
++| 候选环节 | 吞吐影响 | 当前判断 |
+ | --- | --- | --- |
+-| 虚拟环节 A | 建设和认证周期可能长于需求周期 | 假设，待公开证据验证 |
+-| 虚拟环节 B | 替代设计可能影响系统交付 | 假设，待公开证据验证 |
++| 虚拟环节 A | 可能影响建设或认证节拍 | 假设，待公开证据验证 |
+ 
+-## 候选公司
++## 5. 候选公司
+ 
+-列出具备相关产品、认证、交付能力或客户位置的公司类型；对具体公司，需要逐一核对产品收入、订单、产能、客户验证、竞争格局和估值预期。
++| 公司或类型 | 暴露路径 | 待验证证据 |
++| --- | --- | --- |
++| 虚拟公司类型 A | 产品、认证、交付或客户位置 | 收入、订单、产能、认证、竞争格局 |
+ 
+-## 证据需求
++## 6. 证据链
+ 
+-- 公司公告和监管文件中的收入结构、产能与扩产时间。
+-- 项目批复、招投标和客户认证。
+-- 多源价格、交期、库存、利用率和良率数据。
+-- 能推翻供需持续性或价值捕获机制的证据。
++| evidence_id | claim | source_type | source_title | source_url | date | evidence_level | supports | contradicts | confidence | notes |
++| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
++| E001 | 虚拟环节 A 可能影响有效产出 |  |  | TBD |  | L0 | 待验证判断 |  | low | 示例占位，不代表真实证据 |
+ 
+-## 风险清单
++## 7. 反证与风险
+ 
+-需求延后、供给快速扩张、替代方案、客户压价、项目取消、政策变化、估值已反映和制约迁移。
++需求延后、供给快速扩张、替代方案、客户压价、项目取消、估值已反映和制约迁移。
+ 
+-## 跟踪指标
++## 8. 跟踪指标
+ 
+-交期、价格、库存、产能、良率、认证进度、订单兑现、项目投运和客户集中度。
++交期、价格、库存、产能、良率、认证进度、订单兑现和项目投运。
+ 
+-## 假设失效条件
++## 9. 假设失效条件
+ 
+-若供应恢复速度显著快于预期、替代方案完成认证、候选环节不再影响系统交付，或候选公司无法捕获价值，则研究假设失效。
++供应恢复速度显著快于预期、替代方案完成认证、候选环节不再影响系统交付，或候选公司无法捕获价值。
+ 
+-## 免责声明
++## 10. 免责声明
+ 
+-以上仅为示例研究框架，不构成投资建议。
++以上仅为示例研究框架，属于研究假设，不构成投资建议。
+diff --git a/examples/toc-boundary-example.md b/examples/toc-boundary-example.md
+index 88f2bae..58a5b70 100644
+--- a/examples/toc-boundary-example.md
++++ b/examples/toc-boundary-example.md
+@@ -23,3 +23,9 @@
+ 3. 建立候选公司及其价值捕获证据。
+ 4. 寻找反证并跟踪制约释放和迁移。
+ 5. 写明假设失效条件和免责声明。
++
++## 证据链 Schema
++
++| evidence_id | claim | source_type | source_title | source_url | date | evidence_level | supports | contradicts | confidence | notes |
++| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
++| E001 | 术语或卡点判断 |  |  | TBD |  | L0 |  |  | low | 示例占位，不代表真实证据 |
+diff --git a/references/evidence-table.md b/references/evidence-table.md
+index 9560f4d..d2d7f73 100644
+--- a/references/evidence-table.md
++++ b/references/evidence-table.md
+@@ -1,5 +1,17 @@
+ # Evidence Table
+ 
+-| evidence_id | claim | source_type | source_url | date | supports | contradicts | confidence | notes |
+-| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+-|  |  |  |  |  |  |  |  |  |
++| evidence_id | claim | source_type | source_title | source_url | date | evidence_level | supports | contradicts | confidence | notes |
++| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
++| E001 |  |  |  | TBD |  |  |  |  |  |  |
++
++- `evidence_id`: Evidence identifier, such as `E001`.
++- `claim`: The judgment the evidence supports or weakens.
++- `source_type`: Filing, financial report, prospectus, news, industry report, order, capacity data, certification information, or another traceable type.
++- `source_title`: Source or document title.
++- `source_url`: Public link. If unavailable, mark it `TBD` and explain the document locator in `notes`.
++- `date`: Source date.
++- `evidence_level`: `L0` through `L5` under `references/evidence-ladder.md`.
++- `supports`: The claim or sub-claim supported.
++- `contradicts`: The claim or sub-claim contradicted or weakened.
++- `confidence`: `low`, `medium`, or `high`.
++- `notes`: Units, scope, source independence, limitations, and other context.
+diff --git a/references/framework-v0.1.md b/references/framework-v0.1.md
+index 96cacda..c972fc1 100644
+--- a/references/framework-v0.1.md
++++ b/references/framework-v0.1.md
+@@ -29,3 +29,7 @@
+ ## Minimum Decision Rule
+ 
+ A candidate remains a hypothesis until evidence supports system-level throughput impact, persistence, substitution difficulty, credible value capture, and resilience to counterevidence. A strong operational chokepoint can still be a weak investment hypothesis when valuation or bargaining structure captures the benefit elsewhere.
++
++## Scorecard Direction
++
++Most scorecard dimensions use positive polarity: a higher score means stronger evidence for the candidate chokepoint or its investment-research relevance. `migration_risk` uses negative polarity: a higher score means greater risk that the constraint will be released, bypassed, or move elsewhere. Do not add it directly to positive opportunity scores without an explicit transformation.
+diff --git a/scripts/chokepoint_scorecard.py b/scripts/chokepoint_scorecard.py
+index 44a19d9..4ea97ee 100644
+--- a/scripts/chokepoint_scorecard.py
++++ b/scripts/chokepoint_scorecard.py
+@@ -24,8 +24,13 @@ def print_template(data: dict) -> None:
+     print(f"Note: {scale['meaning']}")
+     print()
+     for name, item in data["dimensions"].items():
+-        print(f"{name}: {item['description']}")
++        score_range = item["score_range"]
++        print(
++            f"{name} [{score_range[0]}-{score_range[1]}, {item['polarity']}]: "
++            f"{item['description']}"
++        )
+     print()
++    print("Negative-polarity dimensions are risk items and must not be added directly to positive opportunity scores.")
+     print(f"Source: {SCORECARD_PATH.relative_to(ROOT)}")
+ 
+ 
+diff --git a/scripts/validate_skill.py b/scripts/validate_skill.py
+index 0873403..0da0a97 100644
+--- a/scripts/validate_skill.py
++++ b/scripts/validate_skill.py
+@@ -1,5 +1,5 @@
+ #!/usr/bin/env python3
+-"""Offline structural and content validation for serenity-chokepoint-skill."""
++"""Offline structural and consistency validation for serenity-chokepoint-skill."""
+ 
+ from __future__ import annotations
+ 
+@@ -7,6 +7,7 @@ import json
+ import re
+ import sys
+ from pathlib import Path
++from urllib.parse import unquote
+ 
+ 
+ ROOT = Path(__file__).resolve().parents[1]
+@@ -58,6 +59,64 @@ REQUIRED_FILES = [
+     "docs/development-workflow.md",
+ ]
+ 
++SKILL_HEADINGS = [
++    "Purpose",
++    "When to Use",
++    "When Not to Use",
++    "Terminology Guard",
++    "Core Workflow",
++    "Output Format",
++    "Evidence Requirements",
++    "Boundary Rules",
++    "Risk and Disclaimer",
++    "References",
++]
++
++OUTPUT_SECTIONS = [
++    "研究问题",
++    "产业价值链",
++    "有效产出定义",
++    "候选供应链卡点",
++    "候选公司",
++    "证据链",
++    "反证与风险",
++    "跟踪指标",
++    "假设失效条件",
++    "免责声明",
++]
++
++OUTPUT_CONTRACT_FILES = [
++    "SKILL.md",
++    "assets/thesis-template.md",
++    "examples/a-share-semiconductor-example.md",
++    "examples/ai-infrastructure-chokepoint-example.md",
++    "examples/demo-conversation.md",
++]
++
++EVIDENCE_SCHEMA = [
++    "evidence_id",
++    "claim",
++    "source_type",
++    "source_title",
++    "source_url",
++    "date",
++    "evidence_level",
++    "supports",
++    "contradicts",
++    "confidence",
++    "notes",
++]
++
++EVIDENCE_SCHEMA_FILES = [
++    "references/evidence-table.md",
++    "assets/evidence-table-template.md",
++    "assets/thesis-template.md",
++    "examples/a-share-semiconductor-example.md",
++    "examples/ai-infrastructure-chokepoint-example.md",
++    "examples/demo-conversation.md",
++    "examples/toc-boundary-example.md",
++]
++
+ SCORECARD_FIELDS = [
+     "demand_pressure",
+     "throughput_impact",
+@@ -71,10 +130,30 @@ SCORECARD_FIELDS = [
+     "evidence_quality",
+ ]
+ 
++PROMPT_REQUIRED_TERMS = [
++    "候选供应链卡点",
++    "候选公司",
++    "证据链",
++    "风险清单",
++    "跟踪指标",
++    "假设失效条件",
++    "免责声明",
++]
++
++PUBLIC_PLACEHOLDERS = [
++    ("<your-org>", re.compile(r"<your-org>", re.IGNORECASE)),
++    ("example.invalid", re.compile(r"example\.invalid", re.IGNORECASE)),
++    ("TODO", re.compile(r"\bTODO\b", re.IGNORECASE)),
++    ("TBD", re.compile(r"\bTBD\b", re.IGNORECASE)),
++]
++
++ALLOWED_PLACEHOLDERS = {(path, "TBD") for path in EVIDENCE_SCHEMA_FILES}
++
+ 
+ class Validator:
+     def __init__(self) -> None:
+         self.failures: list[str] = []
++        self.warnings: list[str] = []
+         self.passes: list[str] = []
+ 
+     def check(self, condition: bool, label: str, detail: str = "") -> None:
+@@ -86,34 +165,100 @@ class Validator:
+         self.failures.append(message)
+         print(f"[FAIL] {message}")
+ 
++    def warn(self, label: str, detail: str) -> None:
++        message = f"{label}: {detail}"
++        self.warnings.append(message)
++        print(f"[WARN] {message}")
++
+ 
+ def read_text(relative_path: str) -> str:
+     return (ROOT / relative_path).read_text(encoding="utf-8")
+ 
+ 
++def repository_files() -> list[Path]:
++    return sorted(
++        path
++        for path in ROOT.rglob("*")
++        if path.is_file() and ".git" not in path.relative_to(ROOT).parts
++    )
++
++
++def parse_frontmatter(text: str) -> tuple[dict[str, str], str | None]:
++    lines = text.splitlines()
++    if not lines or lines[0].strip() != "---":
++        return {}, "opening delimiter is missing"
++    try:
++        closing_index = next(
++            index for index, line in enumerate(lines[1:], start=1) if line.strip() == "---"
++        )
++    except StopIteration:
++        return {}, "closing delimiter is missing"
++
++    metadata: dict[str, str] = {}
++    for line_number, line in enumerate(lines[1:closing_index], start=2):
++        if not line.strip() or line.lstrip().startswith("#"):
++            continue
++        if ":" not in line:
++            return {}, f"invalid metadata line {line_number}"
++        key, value = line.split(":", 1)
++        key = key.strip()
++        value = value.strip().strip('"\'')
++        if not key or not value:
++            return {}, f"empty key or value on metadata line {line_number}"
++        if key in metadata:
++            return {}, f"duplicate metadata key: {key}"
++        metadata[key] = value
++    return metadata, None
++
++
++def markdown_table_header(text: str) -> list[str] | None:
++    for line in text.splitlines():
++        if not line.lstrip().startswith("| evidence_id |"):
++            continue
++        return [cell.strip() for cell in line.strip().strip("|").split("|")]
++    return None
++
++
+ def validate_files(validator: Validator) -> None:
+     missing = [path for path in REQUIRED_FILES if not (ROOT / path).is_file()]
+     validator.check(not missing, "required file structure", ", ".join(missing))
+ 
+ 
++def validate_utf8_and_nonempty(validator: Validator) -> None:
++    empty: list[str] = []
++    invalid_utf8: list[str] = []
++    for path in repository_files():
++        relative = path.relative_to(ROOT)
++        if path.name == ".gitkeep":
++            continue
++        data = path.read_bytes()
++        if not data:
++            empty.append(str(relative))
++            continue
++        try:
++            data.decode("utf-8")
++        except UnicodeDecodeError:
++            invalid_utf8.append(str(relative))
++    validator.check(not empty, "non-.gitkeep files are nonempty", ", ".join(empty))
++    validator.check(not invalid_utf8, "repository text is UTF-8", ", ".join(invalid_utf8))
++
++
+ def validate_skill_entry(validator: Validator) -> None:
+     text = read_text("SKILL.md")
+-    frontmatter = re.match(r"\A---\n(.*?)\n---\n", text, re.DOTALL)
+-    validator.check(frontmatter is not None, "SKILL.md YAML frontmatter")
+-    if frontmatter:
+-        metadata = frontmatter.group(1)
+-        validator.check(
+-            re.search(r"^name:\s*serenity-chokepoint-skill\s*$", metadata, re.MULTILINE)
+-            is not None,
+-            "SKILL.md name",
+-        )
++    metadata, error = parse_frontmatter(text)
++    validator.check(error is None, "SKILL.md YAML frontmatter", error or "")
++    if error is None:
++        for key in ["name", "description", "version"]:
++            validator.check(bool(metadata.get(key)), f"SKILL.md metadata: {key}")
+         validator.check(
+-            re.search(r"^description:\s*\S.+$", metadata, re.MULTILINE) is not None,
+-            "SKILL.md description",
++            metadata.get("name") == "serenity-chokepoint-skill",
++            "SKILL.md canonical name",
++            metadata.get("name", "missing"),
+         )
+ 
+-    for heading in ["Purpose", "Terminology Guard", "Core Workflow", "Output Format"]:
+-        validator.check(f"# {heading}" in text, f"SKILL.md heading: {heading}")
++    for heading in SKILL_HEADINGS:
++        found = re.search(rf"^# {re.escape(heading)}\s*$", text, re.MULTILINE) is not None
++        validator.check(found, f"SKILL.md H1: {heading}")
+ 
+     validator.check(CORE_SENTENCE in text, "SKILL.md frozen core sentence")
+     validator.check(
+@@ -126,16 +271,54 @@ def validate_skill_entry(validator: Validator) -> None:
+     )
+ 
+ 
++def contract_term_present(text: str, term: str) -> bool:
++    pattern = rf"^(?:#{{1,6}}\s+(?:\d+\.\s*)?|\d+\.\s*){re.escape(term)}\s*$"
++    return re.search(pattern, text, re.MULTILINE) is not None
++
++
++def validate_output_contract(validator: Validator) -> None:
++    for relative_path in OUTPUT_CONTRACT_FILES:
++        text = read_text(relative_path)
++        missing = [term for term in OUTPUT_SECTIONS if not contract_term_present(text, term)]
++        validator.check(
++            not missing,
++            f"ten-section output contract: {relative_path}",
++            ", ".join(missing),
++        )
++
++
+ def validate_readmes_and_policy(validator: Validator) -> None:
+     readme_zh = read_text("README.zh-CN.md")
++    readme_en = read_text("README.en.md")
+     project_spec = read_text("docs/project-spec.md")
+     translation = read_text("references/translation-policy.md")
+ 
+     validator.check(CORE_SENTENCE in readme_zh, "README.zh-CN.md frozen core sentence")
+     validator.check(CORE_SENTENCE in project_spec, "project-spec frozen core sentence")
+     validator.check(
+-        all(term in readme_zh for term in ["供应链卡点", "卡点理论", "供应链卡点分析"]),
+-        "README.zh-CN.md default terminology",
++        all(term in readme_zh for term in OUTPUT_SECTIONS),
++        "README.zh-CN.md ten-section vocabulary",
++    )
++    english_sections = [
++        "Research question",
++        "Value chain",
++        "Throughput definition",
++        "Candidate supply-chain chokepoints",
++        "Candidate companies",
++        "Evidence chain",
++        "Counterevidence and risks",
++        "Tracking indicators",
++        "Invalidation conditions",
++        "Disclaimer",
++    ]
++    validator.check(
++        all(term in readme_en for term in english_sections),
++        "README.en.md ten-section vocabulary",
++    )
++    validator.check(
++        "https://github.com/hlamt/serenity-chokepoint-skill" in readme_zh
++        and "https://github.com/hlamt/serenity-chokepoint-skill" in readme_en,
++        "canonical repository URL",
+     )
+     validator.check(
+         "不构成投资建议" in readme_zh and "研究假设" in readme_zh,
+@@ -147,14 +330,41 @@ def validate_readmes_and_policy(validator: Validator) -> None:
+     )
+ 
+ 
++def validate_evidence_schema(validator: Validator) -> None:
++    for relative_path in EVIDENCE_SCHEMA_FILES:
++        header = markdown_table_header(read_text(relative_path))
++        validator.check(
++            header == EVIDENCE_SCHEMA,
++            f"evidence schema: {relative_path}",
++            f"expected {EVIDENCE_SCHEMA}, got {header}",
++        )
++
++
++def prompt_sections(text: str) -> list[tuple[str, str]]:
++    matches = list(re.finditer(r"^## (\d+)\.\s+(.+)$", text, re.MULTILINE))
++    sections: list[tuple[str, str]] = []
++    for index, match in enumerate(matches):
++        end = matches[index + 1].start() if index + 1 < len(matches) else len(text)
++        sections.append((match.group(1), text[match.start():end]))
++    return sections
++
++
+ def validate_prompt_pack(validator: Validator) -> None:
+-    prompt_pack = read_text("assets/research-prompt-pack.md")
+-    validator.check(
+-        len(re.findall(r"^## \d+\.", prompt_pack, re.MULTILINE)) >= 5,
+-        "Prompt Pack contains five prompts",
+-    )
+-    for phrase in ["证据链", "风险清单", "跟踪指标", "假设失效条件", "免责声明"]:
+-        validator.check(phrase in prompt_pack, f"Prompt Pack requires {phrase}")
++    sections = prompt_sections(read_text("assets/research-prompt-pack.md"))
++    validator.check(len(sections) == 5, "Prompt Pack contains exactly five prompts")
++    for number, section in sections:
++        missing_required = [term for term in PROMPT_REQUIRED_TERMS if term not in section]
++        missing_contract = [term for term in OUTPUT_SECTIONS if term not in section]
++        validator.check(
++            not missing_required,
++            f"Prompt {number} required research fields",
++            ", ".join(missing_required),
++        )
++        validator.check(
++            not missing_contract,
++            f"Prompt {number} ten-section contract",
++            ", ".join(missing_contract),
++        )
+ 
+ 
+ def validate_scorecard(validator: Validator) -> None:
+@@ -171,41 +381,133 @@ def validate_scorecard(validator: Validator) -> None:
+         "scorecard dimensions",
+         "expected the ten dimensions in the documented order",
+     )
+-    scores_valid = all(
+-        isinstance(item, dict)
+-        and isinstance(item.get("score"), int)
+-        and 0 <= item["score"] <= 5
+-        and bool(item.get("description"))
+-        for item in dimensions.values()
++
++    invalid: list[str] = []
++    for name, item in dimensions.items():
++        if not isinstance(item, dict):
++            invalid.append(f"{name}: not an object")
++            continue
++        if item.get("name") != name:
++            invalid.append(f"{name}: name mismatch")
++        if not isinstance(item.get("description"), str) or not item["description"].strip():
++            invalid.append(f"{name}: description missing")
++        if item.get("score_range") != [0, 5]:
++            invalid.append(f"{name}: score_range must be [0, 5]")
++        if item.get("polarity") not in {"positive", "negative"}:
++            invalid.append(f"{name}: invalid polarity")
++        score = item.get("score")
++        if not isinstance(score, int) or not 0 <= score <= 5:
++            invalid.append(f"{name}: score must be an integer from 0 to 5")
++    validator.check(not invalid, "scorecard dimension schema", "; ".join(invalid))
++    validator.check(
++        dimensions.get("migration_risk", {}).get("polarity") == "negative",
++        "migration_risk negative polarity",
++    )
++    positive_mismatch = [
++        name
++        for name in SCORECARD_FIELDS
++        if name != "migration_risk"
++        and dimensions.get(name, {}).get("polarity") != "positive"
++    ]
++    validator.check(
++        not positive_mismatch,
++        "positive scorecard polarity",
++        ", ".join(positive_mismatch),
+     )
+-    validator.check(scores_valid, "scorecard values and descriptions")
+ 
+ 
+-def validate_prohibited_language(validator: Validator) -> None:
+-    prohibited = [
+-        "Chokepoint Theory " + "就是 TOC",
+-        "必" + "买",
+-        "一定" + "上涨",
+-        "保证" + "收益",
+-        "个性化" + "投资建议",
++def validate_markdown_links(validator: Validator) -> None:
++    missing: list[str] = []
++    link_pattern = re.compile(r"!?\[[^\]]*\]\(([^)]+)\)")
++    for path in repository_files():
++        if path.suffix.lower() != ".md":
++            continue
++        text = path.read_text(encoding="utf-8")
++        for match in link_pattern.finditer(text):
++            raw_target = match.group(1).strip()
++            if raw_target.startswith("<") and ">" in raw_target:
++                target = raw_target[1:raw_target.index(">")]
++            else:
++                target = raw_target.split(maxsplit=1)[0]
++            if target.startswith(("http://", "https://", "mailto:", "#")):
++                continue
++            target = unquote(target.split("#", 1)[0].split("?", 1)[0])
++            if not target:
++                continue
++            destination = (path.parent / target).resolve()
++            if not destination.exists():
++                missing.append(f"{path.relative_to(ROOT)} -> {target}")
++    validator.check(not missing, "Markdown relative links", "; ".join(missing))
++
++
++def validate_public_placeholders(validator: Validator) -> None:
++    findings: list[str] = []
++    for path in repository_files():
++        if path.suffix.lower() not in {".md", ".json"}:
++            continue
++        text = path.read_text(encoding="utf-8")
++        for label, pattern in PUBLIC_PLACEHOLDERS:
++            relative = str(path.relative_to(ROOT))
++            if pattern.search(text) and (relative, label) not in ALLOWED_PLACEHOLDERS:
++                findings.append(f"{relative}: {label}")
++    if findings:
++        validator.warn("public placeholder scan", "; ".join(findings))
++    else:
++        validator.passes.append("public placeholder scan")
++        print("[PASS] public placeholder scan")
++
++
++def has_negative_context(context: str, match_start_in_line: int, line: str) -> bool:
++    prefix = line[max(0, match_start_in_line - 32):match_start_in_line]
++    local_context = f"{context}\n{prefix}".lower()
++    negative_markers = [
++        "不",
++        "非",
++        "无",
++        "禁止",
++        "避免",
++        "不得",
++        "不可",
++        "拒绝",
++        "错误表达",
++        "反模式",
++        "do not",
++        "does not",
++        "is not",
++        "must not",
++        "never",
++        "avoid",
++        "anti-pattern",
++    ]
++    return any(marker in local_context for marker in negative_markers)
++
++
++def validate_high_risk_language(validator: Validator) -> None:
++    risky_patterns = [
++        ("必买", re.compile(r"必买")),
++        ("一定上涨", re.compile(r"一定上涨")),
++        ("保证收益", re.compile(r"保证收益")),
++        (
++            "direct Chokepoint/TOC equivalence",
++            re.compile(
++                r"Chokepoint Theory\s*(?:就是|等同于|=|is)\s*(?:TOC|制约理论|Theory of Constraints)",
++                re.IGNORECASE,
++            ),
++        ),
+     ]
+-    positive_equivalence = re.compile(
+-        r"Chokepoint Theory\s*(?:就是|等同于|=|is)\s*(?:TOC|制约理论|Theory of Constraints)",
+-        re.IGNORECASE,
+-    )
+     violations: list[str] = []
+-    for path in sorted(ROOT.rglob("*")):
+-        if not path.is_file() or path.suffix not in {".md", ".json"}:
++    for path in repository_files():
++        if path.suffix.lower() not in {".md", ".json"}:
+             continue
+-        text = path.read_text(encoding="utf-8")
+-        relative = path.relative_to(ROOT)
+-        for phrase in prohibited:
+-            if phrase in text:
+-                violations.append(f"{relative}: prohibited phrase")
+-        if positive_equivalence.search(text):
+-            violations.append(f"{relative}: direct Chokepoint/TOC equivalence")
+-
+-    validator.check(not violations, "high-risk language scan", "; ".join(violations))
++        lines = path.read_text(encoding="utf-8").splitlines()
++        for line_number, line in enumerate(lines, start=1):
++            preceding_context = "\n".join(lines[max(0, line_number - 3):line_number - 1])
++            for label, pattern in risky_patterns:
++                for match in pattern.finditer(line):
++                    if has_negative_context(preceding_context, match.start(), line):
++                        continue
++                    violations.append(f"{path.relative_to(ROOT)}:{line_number}: {label}")
++    validator.check(not violations, "affirmative high-risk language scan", "; ".join(violations))
+ 
+ 
+ def main() -> int:
+@@ -215,13 +517,21 @@ def main() -> int:
+         print("\nValidation stopped because required files are missing.")
+         return 1
+ 
++    validate_utf8_and_nonempty(validator)
+     validate_skill_entry(validator)
++    validate_output_contract(validator)
+     validate_readmes_and_policy(validator)
++    validate_evidence_schema(validator)
+     validate_prompt_pack(validator)
+     validate_scorecard(validator)
+-    validate_prohibited_language(validator)
++    validate_markdown_links(validator)
++    validate_public_placeholders(validator)
++    validate_high_risk_language(validator)
+ 
+-    print(f"\nSummary: {len(validator.passes)} passed, {len(validator.failures)} failed.")
++    print(
++        f"\nSummary: {len(validator.passes)} passed, "
++        f"{len(validator.warnings)} warnings, {len(validator.failures)} failed."
++    )
+     if validator.failures:
+         for failure in validator.failures:
+             print(f"- {failure}")
