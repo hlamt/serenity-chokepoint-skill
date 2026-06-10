@@ -37,6 +37,8 @@ REQUIRED_FILES = [
     "references/risk-and-compliance.md",
     "references/evidence-table.md",
     "references/framework-v0.1.md",
+    "references/source-types.md",
+    "references/serenity-source-policy.md",
     "assets/chokepoint-scorecard.json",
     "assets/research-prompt-pack.md",
     "assets/thesis-template.md",
@@ -51,10 +53,12 @@ REQUIRED_FILES = [
     "evals/boundary-checks.md",
     "evals/test-cases.md",
     "evals/anti-patterns.md",
+    "evals/source-boundary-test-cases.md",
     "agents/serenity-chokepoint-researcher.md",
     "data/raw/.gitkeep",
     "data/processed/.gitkeep",
     "docs/project-spec.md",
+    "docs/source-evidence-plan.md",
     "docs/distillation-rules.md",
     "docs/development-workflow.md",
 ]
@@ -140,6 +144,31 @@ PROMPT_REQUIRED_TERMS = [
     "免责声明",
 ]
 
+SOURCE_EVIDENCE_TEXT_FILES = [
+    "docs/source-evidence-plan.md",
+    "references/source-types.md",
+    "references/serenity-source-policy.md",
+    "evals/source-boundary-test-cases.md",
+]
+
+SOURCE_POLICY_TERMS = [
+    "public expression",
+    "attribution",
+    "paraphrase",
+    "quotation",
+    "endorsement",
+    "impersonate",
+    "investment advice",
+]
+
+SOURCE_BOUNDARY_TEST_TERMS = [
+    "batch scrape",
+    "community interpretation",
+    "official endorsement",
+    "buy/sell",
+    "company disclosure",
+]
+
 PUBLIC_PLACEHOLDERS = [
     ("<your-org>", re.compile(r"<your-org>", re.IGNORECASE)),
     ("example.invalid", re.compile(r"example\.invalid", re.IGNORECASE)),
@@ -179,7 +208,9 @@ def repository_files() -> list[Path]:
     return sorted(
         path
         for path in ROOT.rglob("*")
-        if path.is_file() and ".git" not in path.relative_to(ROOT).parts
+        if path.is_file()
+        and ".git" not in path.relative_to(ROOT).parts
+        and "__pycache__" not in path.relative_to(ROOT).parts
     )
 
 
@@ -241,6 +272,43 @@ def validate_utf8_and_nonempty(validator: Validator) -> None:
             invalid_utf8.append(str(relative))
     validator.check(not empty, "non-.gitkeep files are nonempty", ", ".join(empty))
     validator.check(not invalid_utf8, "repository text is UTF-8", ", ".join(invalid_utf8))
+
+
+def validate_source_evidence_files(validator: Validator) -> None:
+    unreadable: list[str] = []
+    empty: list[str] = []
+    for relative_path in SOURCE_EVIDENCE_TEXT_FILES:
+        try:
+            text = read_text(relative_path)
+        except UnicodeDecodeError:
+            unreadable.append(relative_path)
+            continue
+        if not text.strip():
+            empty.append(relative_path)
+
+    validator.check(not unreadable, "source evidence text files are UTF-8", ", ".join(unreadable))
+    validator.check(not empty, "source evidence text files are nonempty", ", ".join(empty))
+
+    if unreadable or empty:
+        return
+
+    source_policy = read_text("references/serenity-source-policy.md")
+    missing_policy_terms = [term for term in SOURCE_POLICY_TERMS if term not in source_policy]
+    validator.check(
+        not missing_policy_terms,
+        "serenity source policy required terms",
+        ", ".join(missing_policy_terms),
+    )
+
+    boundary_tests = read_text("evals/source-boundary-test-cases.md")
+    missing_boundary_terms = [
+        term for term in SOURCE_BOUNDARY_TEST_TERMS if term not in boundary_tests
+    ]
+    validator.check(
+        not missing_boundary_terms,
+        "source boundary test required terms",
+        ", ".join(missing_boundary_terms),
+    )
 
 
 def validate_skill_entry(validator: Validator) -> None:
@@ -518,6 +586,7 @@ def main() -> int:
         return 1
 
     validate_utf8_and_nonempty(validator)
+    validate_source_evidence_files(validator)
     validate_skill_entry(validator)
     validate_output_contract(validator)
     validate_readmes_and_policy(validator)
