@@ -1,0 +1,50 @@
+{
+  "schema_version": "0.1.0",
+  "scale": {
+    "min": 0,
+    "max": 5,
+    "meaning": "0 means no supporting evidence; 5 means strong, current, cross-checked evidence. Scores are research aids, not investment ratings."
+  },
+  "dimensions": {
+    "demand_pressure": {
+      "score": 0,
+      "description": "Strength, persistence, and visibility of demand pressure."
+    },
+    "throughput_impact": {
+      "score": 0,
+      "description": "Degree to which the node limits defined system throughput."
+    },
+    "ccr_characteristics": {
+      "score": 0,
+      "description": "Evidence of capacity-constrained-resource behavior such as queues, allocation, or schedule control."
+    },
+    "substitution_difficulty": {
+      "score": 0,
+      "description": "Technical, qualification, switching-cost, ecosystem, or regulatory barriers to substitution."
+    },
+    "elevation_lead_time": {
+      "score": 0,
+      "description": "Time and uncertainty required to expand, debottleneck, qualify, or otherwise elevate supply."
+    },
+    "subordination_evidence": {
+      "score": 0,
+      "description": "Evidence that upstream and downstream actors adapt plans, inventory, or schedules to this node."
+    },
+    "economic_capture": {
+      "score": 0,
+      "description": "Ability of exposed suppliers to retain pricing, margin, volume, or strategic bargaining benefits."
+    },
+    "mispricing_potential": {
+      "score": 0,
+      "description": "Evidence-based gap between operating implications and market expectations, after valuation risk."
+    },
+    "migration_risk": {
+      "score": 0,
+      "description": "Risk that the constraint is released, bypassed, or migrates elsewhere; higher means greater risk."
+    },
+    "evidence_quality": {
+      "score": 0,
+      "description": "Recency, traceability, independence, and counterevidence resilience of the evidence set."
+    }
+  }
+}
