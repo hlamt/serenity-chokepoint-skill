@@ -22,11 +22,11 @@ Do not automatically translate Chokepoint Theory as “瓶颈理论”. Default 
 For Agent Skills-compatible clients:
 
 ```bash
-git clone https://github.com/<your-org>/serenity-chokepoint-skill.git
-python scripts/validate_skill.py
+git clone https://github.com/hlamt/serenity-chokepoint-skill.git
+python3 scripts/validate_skill.py
 ```
 
-Use the repository as a Skill directory, ask the Agent to read `SKILL.md`, load relevant files from `references/` as needed, and reuse prompts from `assets/research-prompt-pack.md`. Compatibility is client-dependent.
+Use the repository as a Skill directory, ask the Agent to read `SKILL.md`, load relevant files from `references/`, and reuse prompts from `assets/research-prompt-pack.md`. It is intended for clients that support Agent Skills; loading details depend on the client.
 
 ## Output Format
 
@@ -35,7 +35,7 @@ Use the repository as a Skill directory, ask the Agent to read `SKILL.md`, load 
 3. Throughput definition
 4. Candidate supply-chain chokepoints
 5. Candidate companies
-6. Evidence table
+6. Evidence chain
 7. Counterevidence and risks
 8. Tracking indicators
 9. Invalidation conditions
@@ -43,4 +43,4 @@ Use the repository as a Skill directory, ask the Agent to read `SKILL.md`, load 
 
 ## Disclaimer
 
-This independent project is not officially authorized by Serenity and is not TOC certification or personality simulation. It uses public information for research and methodology learning. It does not provide investment advice, return promises, or individualized asset allocation. Users bear their own investment risk, and public information may be delayed, incomplete, or wrong.
+Outputs are research hypotheses, not investment advice. Public information may be delayed, incomplete, or wrong. See [DISCLAIMER.md](DISCLAIMER.md) for the full boundary.

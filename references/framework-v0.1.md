@@ -29,3 +29,7 @@
 ## Minimum Decision Rule
 
 A candidate remains a hypothesis until evidence supports system-level throughput impact, persistence, substitution difficulty, credible value capture, and resilience to counterevidence. A strong operational chokepoint can still be a weak investment hypothesis when valuation or bargaining structure captures the benefit elsewhere.
+
+## Scorecard Direction
+
+Most scorecard dimensions use positive polarity: a higher score means stronger evidence for the candidate chokepoint or its investment-research relevance. `migration_risk` uses negative polarity: a higher score means greater risk that the constraint will be released, bypassed, or move elsewhere. Do not add it directly to positive opportunity scores without an explicit transformation.

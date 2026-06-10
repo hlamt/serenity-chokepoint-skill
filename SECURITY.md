@@ -11,6 +11,6 @@ This repository is designed for public-information research. Do not submit or st
 
 ## Reporting a Leak
 
-Do not open a public issue containing sensitive material. Use GitHub Security Advisories when enabled, or contact `security@example.invalid` as a placeholder until the maintainers publish a real security address. Describe the affected path without reproducing the secret.
+Do not open a public issue containing sensitive material. Use this repository's GitHub Security Advisories when available. If private reporting is unavailable, open an issue or discussion containing no secret material and ask the maintainers to provide a private reporting channel.
 
 If a leak is found, stop using the credential, revoke or rotate it through the relevant provider, remove it from working files and history using an approved process, and document only the remediation outcome.

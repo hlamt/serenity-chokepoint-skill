@@ -9,23 +9,9 @@ Every authorization upgrade requires explicit user approval.
 | L2 | 联网抓取 | Access websites, APIs, repositories, X, or external data |
 | L3 | commit | Create a git commit or perform related publishing actions |
 
-## Current Authorization
+## Authorization Rule
 
-Current level: **L1 local modification only**.
-
-Allowed:
-
-- Create the requested project skeleton and documentation.
-- Run local scripts that operate only on repository files.
-- Inspect git status and local file structure.
-
-Not allowed without a new explicit authorization:
-
-- Network access or external repository lookup.
-- X scraping or cookie/session access.
-- LLM or external API calls from project scripts.
-- Reading or writing secrets.
-- Git commit, push, release, or publication.
+每轮任务必须在用户明确授权的级别内执行；授权级别随任务而定，不在文档中固定当前状态。超出当轮授权范围的联网、抓取、凭据访问、提交或发布操作，必须先获得新的明确授权。
 
 ## Change Loop
 
