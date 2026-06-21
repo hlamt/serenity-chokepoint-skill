@@ -40,6 +40,7 @@ REQUIRED_FILES = [
     "references/source-types.md",
     "references/serenity-source-policy.md",
     "assets/chokepoint-scorecard.json",
+    "assets/source-digest-template.md",
     "assets/research-prompt-pack.md",
     "assets/thesis-template.md",
     "assets/evidence-table-template.md",
@@ -54,6 +55,7 @@ REQUIRED_FILES = [
     "evals/test-cases.md",
     "evals/anti-patterns.md",
     "evals/source-boundary-test-cases.md",
+    "evals/source-digest-test-cases.md",
     "agents/serenity-chokepoint-researcher.md",
     "data/raw/.gitkeep",
     "data/processed/.gitkeep",
@@ -61,6 +63,7 @@ REQUIRED_FILES = [
     "docs/source-evidence-plan.md",
     "docs/distillation-rules.md",
     "docs/development-workflow.md",
+    "docs/source-digest-workflow.md",
 ]
 
 SKILL_HEADINGS = [
@@ -168,6 +171,45 @@ SOURCE_BOUNDARY_TEST_TERMS = [
     "buy/sell",
     "company disclosure",
 ]
+
+SOURCE_DIGEST_REQUIRED_TERMS = {
+    "assets/source-digest-template.md": [
+        "digest_id",
+        "source_type",
+        "original_excerpt",
+        "paraphrase",
+        "translation_note",
+        "attribution",
+        "claim_extracted",
+        "interpretation_boundary",
+        "missing_checks",
+        "allowed_use",
+        "disallowed_use",
+        "non_investment_advice_note",
+    ],
+    "docs/source-digest-workflow.md": [
+        "Source Digest",
+        "attribution",
+        "quotation boundary",
+        "community interpretation",
+        "assistant inference",
+        "non-investment-advice",
+        "not a Serenity official statement",
+        "social media heat",
+    ],
+    "evals/source-digest-test-cases.md": [
+        "Serenity",
+        "community retelling",
+        "company announcement",
+        "earnings-call excerpt",
+        "buy recommendation",
+        "impersonation",
+        "unsourced screenshot",
+        "bulk X",
+        "confirmed chokepoint",
+        "long verbatim",
+    ],
+}
 
 PUBLIC_PLACEHOLDERS = [
     ("<your-org>", re.compile(r"<your-org>", re.IGNORECASE)),
@@ -309,6 +351,57 @@ def validate_source_evidence_files(validator: Validator) -> None:
         "source boundary test required terms",
         ", ".join(missing_boundary_terms),
     )
+
+
+def contains_keyword_sequence(text: str, keyword: str) -> bool:
+    text_tokens = re.findall(r"\w+", text.casefold())
+    keyword_tokens = re.findall(r"\w+", keyword.casefold())
+    maximum_window = len(keyword_tokens) + 4
+    for start, token in enumerate(text_tokens):
+        if token != keyword_tokens[0]:
+            continue
+        keyword_index = 1
+        for candidate in text_tokens[start + 1:start + maximum_window]:
+            if keyword_index == len(keyword_tokens):
+                break
+            if candidate == keyword_tokens[keyword_index]:
+                keyword_index += 1
+        if keyword_index == len(keyword_tokens):
+            return True
+    return False
+
+
+def validate_source_digest_files(validator: Validator) -> None:
+    unreadable: list[str] = []
+    empty: list[str] = []
+    contents: dict[str, str] = {}
+    for relative_path in SOURCE_DIGEST_REQUIRED_TERMS:
+        try:
+            text = read_text(relative_path)
+        except UnicodeDecodeError:
+            unreadable.append(relative_path)
+            continue
+        if not text.strip():
+            empty.append(relative_path)
+            continue
+        contents[relative_path] = text
+
+    validator.check(not unreadable, "source digest files are UTF-8", ", ".join(unreadable))
+    validator.check(not empty, "source digest files are nonempty", ", ".join(empty))
+
+    for relative_path, required_terms in SOURCE_DIGEST_REQUIRED_TERMS.items():
+        if relative_path not in contents:
+            continue
+        missing_terms = [
+            term
+            for term in required_terms
+            if not contains_keyword_sequence(contents[relative_path], term)
+        ]
+        validator.check(
+            not missing_terms,
+            f"source digest required terms: {relative_path}",
+            ", ".join(missing_terms),
+        )
 
 
 def validate_skill_entry(validator: Validator) -> None:
@@ -587,6 +680,7 @@ def main() -> int:
 
     validate_utf8_and_nonempty(validator)
     validate_source_evidence_files(validator)
+    validate_source_digest_files(validator)
     validate_skill_entry(validator)
     validate_output_contract(validator)
     validate_readmes_and_policy(validator)
