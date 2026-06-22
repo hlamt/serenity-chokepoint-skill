@@ -1,0 +1,419 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/hlamt/serenity-chokepoint-skill/schemas/manual-case-replay-packet.schema.json",
+  "title": "Manual Case Replay Packet Schema v1.0F2",
+  "description": "This schema defines future manual case replay packet structure only. It contains no real source data, no real Serenity text, no corpus entries, no method claims, no TOC calibration rows, no company conclusions, no investment research report, and no investment advice.",
+  "type": "object",
+  "required": [
+    "object_type"
+  ],
+  "properties": {
+    "object_type": {
+      "type": "string",
+      "enum": [
+        "manual_case_replay_packet",
+        "manual_source_packet"
+      ]
+    }
+  },
+  "oneOf": [
+    {
+      "$ref": "#/$defs/manual_case_replay_packet"
+    },
+    {
+      "$ref": "#/$defs/manual_source_packet"
+    }
+  ],
+  "$defs": {
+    "non_empty_string": {
+      "type": "string",
+      "minLength": 1
+    },
+    "iso_8601_string": {
+      "type": "string",
+      "minLength": 1,
+      "description": "A timestamp or date string; ISO 8601 format is recommended."
+    },
+    "id_array": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/non_empty_string"
+      }
+    },
+    "limitations": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/non_empty_string"
+      }
+    },
+    "source_type": {
+      "type": "string",
+      "enum": [
+        "serenity_original_public_expression",
+        "serenity_quoted_secondary_coverage",
+        "public_secondary_analysis",
+        "community_interpretation",
+        "user_provided_research_note",
+        "assistant_inference",
+        "industry_evidence",
+        "company_evidence",
+        "market_evidence"
+      ]
+    },
+    "boundary_controls": {
+      "type": "object",
+      "description": "Explicit controls preserving the no-collection, no-real-replay, and non-investment-advice boundaries.",
+      "required": [
+        "no_x_scraping",
+        "no_twscrape",
+        "no_external_api",
+        "no_secrets",
+        "no_real_serenity_text",
+        "no_corpus_data",
+        "no_real_method_claims",
+        "no_real_toc_calibration",
+        "no_real_company_conclusion",
+        "no_real_investment_report",
+        "no_investment_advice"
+      ],
+      "properties": {
+        "no_x_scraping": {
+          "type": "boolean"
+        },
+        "no_twscrape": {
+          "type": "boolean"
+        },
+        "no_external_api": {
+          "type": "boolean"
+        },
+        "no_secrets": {
+          "type": "boolean"
+        },
+        "no_real_serenity_text": {
+          "type": "boolean"
+        },
+        "no_corpus_data": {
+          "type": "boolean"
+        },
+        "no_real_method_claims": {
+          "type": "boolean"
+        },
+        "no_real_toc_calibration": {
+          "type": "boolean"
+        },
+        "no_real_company_conclusion": {
+          "type": "boolean"
+        },
+        "no_real_investment_report": {
+          "type": "boolean"
+        },
+        "no_investment_advice": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": false
+    },
+    "review_note": {
+      "type": "object",
+      "required": [
+        "reviewer",
+        "reviewed_at",
+        "note",
+        "disposition"
+      ],
+      "properties": {
+        "reviewer": {
+          "$ref": "#/$defs/non_empty_string"
+        },
+        "reviewed_at": {
+          "$ref": "#/$defs/iso_8601_string"
+        },
+        "note": {
+          "$ref": "#/$defs/non_empty_string"
+        },
+        "disposition": {
+          "type": "string",
+          "enum": [
+            "needs_review",
+            "accepted",
+            "rejected",
+            "deferred",
+            "quarantined"
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "manual_case_replay_packet": {
+      "type": "object",
+      "description": "A future manual replay packet structure for process evidence only, not a real replay result or investment conclusion.",
+      "required": [
+        "object_type",
+        "replay_packet_id",
+        "replay_packet_version",
+        "replay_title",
+        "replay_scope",
+        "industry_or_theme",
+        "geography_or_market",
+        "time_horizon",
+        "source_packet_ids",
+        "source_record_ids",
+        "corpus_entry_ids",
+        "distillation_queue_ids",
+        "method_claim_ids",
+        "calibration_row_ids",
+        "report_id",
+        "replay_status",
+        "reviewer",
+        "created_at",
+        "updated_at",
+        "limitations",
+        "next_action",
+        "boundary_controls",
+        "review_notes"
+      ],
+      "properties": {
+        "object_type": {
+          "const": "manual_case_replay_packet"
+        },
+        "replay_packet_id": {
+          "$ref": "#/$defs/non_empty_string"
+        },
+        "replay_packet_version": {
+          "$ref": "#/$defs/non_empty_string"
+        },
+        "replay_title": {
+          "$ref": "#/$defs/non_empty_string"
+        },
+        "replay_scope": {
+          "$ref": "#/$defs/non_empty_string"
+        },
+        "industry_or_theme": {
+          "$ref": "#/$defs/non_empty_string"
+        },
+        "geography_or_market": {
+          "$ref": "#/$defs/non_empty_string"
+        },
+        "time_horizon": {
+          "$ref": "#/$defs/non_empty_string"
+        },
+        "source_packet_ids": {
+          "$ref": "#/$defs/id_array"
+        },
+        "source_record_ids": {
+          "$ref": "#/$defs/id_array"
+        },
+        "corpus_entry_ids": {
+          "$ref": "#/$defs/id_array"
+        },
+        "distillation_queue_ids": {
+          "$ref": "#/$defs/id_array"
+        },
+        "method_claim_ids": {
+          "$ref": "#/$defs/id_array"
+        },
+        "calibration_row_ids": {
+          "$ref": "#/$defs/id_array"
+        },
+        "report_id": {
+          "description": "A future report-template replay object identifier. V1.0F2 does not generate a real report object.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "replay_status": {
+          "type": "string",
+          "description": "accepted_as_replay_evidence means process-replay evidence only. It does not establish a real investment conclusion, validate a real company or investment performance, prove method completeness, or imply Serenity endorsement.",
+          "enum": [
+            "draft_packet",
+            "source_packet_ready",
+            "source_records_reviewed",
+            "corpus_entries_prepared",
+            "method_claims_prepared",
+            "calibration_rows_prepared",
+            "report_template_replayed",
+            "replay_reviewed",
+            "accepted_as_replay_evidence",
+            "rejected",
+            "deferred"
+          ]
+        },
+        "reviewer": {
+          "$ref": "#/$defs/non_empty_string"
+        },
+        "created_at": {
+          "$ref": "#/$defs/iso_8601_string"
+        },
+        "updated_at": {
+          "$ref": "#/$defs/iso_8601_string"
+        },
+        "limitations": {
+          "$ref": "#/$defs/limitations"
+        },
+        "next_action": {
+          "$ref": "#/$defs/non_empty_string"
+        },
+        "boundary_controls": {
+          "$ref": "#/$defs/boundary_controls"
+        },
+        "review_notes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/review_note"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "source_locator": {
+      "type": "object",
+      "required": [
+        "locator",
+        "locator_type",
+        "source_type",
+        "published_at",
+        "captured_at",
+        "notes"
+      ],
+      "properties": {
+        "locator": {
+          "$ref": "#/$defs/non_empty_string"
+        },
+        "locator_type": {
+          "type": "string",
+          "enum": [
+            "public_url",
+            "user_owned_note",
+            "licensed_source",
+            "manual_reference",
+            "other_authorized_locator"
+          ]
+        },
+        "source_type": {
+          "$ref": "#/$defs/source_type"
+        },
+        "published_at": {
+          "$ref": "#/$defs/iso_8601_string"
+        },
+        "captured_at": {
+          "$ref": "#/$defs/iso_8601_string"
+        },
+        "notes": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "manual_source_packet": {
+      "type": "object",
+      "description": "A future manually provided, bounded, and authorized source-reference packet structure. It is not source collection or corpus data.",
+      "required": [
+        "object_type",
+        "source_packet_id",
+        "source_packet_version",
+        "packet_scope",
+        "source_locator_list",
+        "source_type_list",
+        "acquisition_method",
+        "permission_basis",
+        "excerpt_boundary_note",
+        "attribution_note",
+        "translation_note",
+        "user_provided_context",
+        "disallowed_use",
+        "reviewer_note",
+        "status",
+        "boundary_controls"
+      ],
+      "properties": {
+        "object_type": {
+          "const": "manual_source_packet"
+        },
+        "source_packet_id": {
+          "$ref": "#/$defs/non_empty_string"
+        },
+        "source_packet_version": {
+          "$ref": "#/$defs/non_empty_string"
+        },
+        "packet_scope": {
+          "$ref": "#/$defs/non_empty_string"
+        },
+        "source_locator_list": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/source_locator"
+          }
+        },
+        "source_type_list": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/source_type"
+          },
+          "uniqueItems": true
+        },
+        "acquisition_method": {
+          "type": "string",
+          "enum": [
+            "manual_public_url",
+            "manual_bounded_excerpt",
+            "user_owned_note",
+            "licensed_or_authorized_source",
+            "other_reviewed_manual_method"
+          ]
+        },
+        "permission_basis": {
+          "$ref": "#/$defs/non_empty_string"
+        },
+        "excerpt_boundary_note": {
+          "$ref": "#/$defs/non_empty_string"
+        },
+        "attribution_note": {
+          "$ref": "#/$defs/non_empty_string"
+        },
+        "translation_note": {
+          "$ref": "#/$defs/non_empty_string"
+        },
+        "user_provided_context": {
+          "type": "string"
+        },
+        "disallowed_use": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "investment_advice",
+              "buy_sell_instruction",
+              "target_price",
+              "position_sizing",
+              "return_promise",
+              "serenity_impersonation",
+              "method_completion_claim",
+              "raw_bulk_republication",
+              "unauthorized_source_reuse"
+            ]
+          },
+          "uniqueItems": true
+        },
+        "reviewer_note": {
+          "$ref": "#/$defs/non_empty_string"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "draft",
+            "intake_review",
+            "accepted_for_replay",
+            "rejected",
+            "quarantined"
+          ]
+        },
+        "boundary_controls": {
+          "$ref": "#/$defs/boundary_controls"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "unevaluatedProperties": false
+}
