@@ -577,6 +577,219 @@ def validate_scorecard(validator: Validator) -> None:
     )
 
 
+def validate_manual_case_replay_packet_schema(validator: Validator) -> None:
+    relative_path = "schemas/manual-case-replay-packet.schema.json"
+    path = ROOT / relative_path
+    validator.check(path.is_file(), "manual case replay packet schema exists", relative_path)
+    if not path.is_file():
+        return
+
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, UnicodeDecodeError, json.JSONDecodeError) as exc:
+        validator.check(False, "manual case replay packet schema JSON parses", str(exc))
+        return
+
+    validator.check(True, "manual case replay packet schema JSON parses")
+    if not isinstance(data, dict):
+        validator.check(
+            False,
+            "manual case replay packet schema root object",
+            "schema root must be a JSON object",
+        )
+        return
+    validator.check(True, "manual case replay packet schema root object")
+
+    validator.check(
+        data.get("$schema") == "https://json-schema.org/draft/2020-12/schema",
+        "manual case replay packet schema draft",
+        "expected JSON Schema draft 2020-12",
+    )
+    title = data.get("title", "")
+    validator.check(
+        isinstance(title, str)
+        and "Manual Case Replay Packet Schema v1.0F2" in title,
+        "manual case replay packet schema title",
+        "title must contain Manual Case Replay Packet Schema v1.0F2",
+    )
+
+    required_description_terms = [
+        "future manual case replay packet structure only",
+        "no real source data",
+        "no real serenity text",
+        "no corpus entries",
+        "no method claims",
+        "no toc calibration rows",
+        "no company conclusions",
+        "no investment research report",
+        "no investment advice",
+    ]
+    description = data.get("description", "")
+    description_text = description.casefold() if isinstance(description, str) else ""
+    missing_description_terms = [
+        term for term in required_description_terms if term not in description_text
+    ]
+    validator.check(
+        not missing_description_terms,
+        "manual case replay packet schema description boundaries",
+        ", ".join(missing_description_terms),
+    )
+
+    properties = data.get("properties", {})
+    object_type = properties.get("object_type", {}) if isinstance(properties, dict) else {}
+    object_type_enum = object_type.get("enum", []) if isinstance(object_type, dict) else []
+    if not isinstance(object_type_enum, list):
+        object_type_enum = []
+    required_object_types = {"manual_case_replay_packet", "manual_source_packet"}
+    missing_object_types = sorted(required_object_types - set(object_type_enum))
+    validator.check(
+        not missing_object_types,
+        "manual case replay packet schema object types",
+        ", ".join(missing_object_types),
+    )
+
+    definitions = data.get("$defs", {})
+    required_definitions = {
+        "manual_case_replay_packet",
+        "manual_source_packet",
+        "boundary_controls",
+        "review_note",
+        "source_locator",
+        "source_type",
+    }
+    available_definitions = set(definitions) if isinstance(definitions, dict) else set()
+    missing_definitions = sorted(required_definitions - available_definitions)
+    validator.check(
+        not missing_definitions,
+        "manual case replay packet schema definitions",
+        ", ".join(missing_definitions),
+    )
+
+    def required_fields(definition_name: str) -> set[str]:
+        if not isinstance(definitions, dict):
+            return set()
+        definition = definitions.get(definition_name, {})
+        if not isinstance(definition, dict):
+            return set()
+        required = definition.get("required", [])
+        return set(required) if isinstance(required, list) else set()
+
+    replay_required = {
+        "object_type",
+        "replay_packet_id",
+        "replay_packet_version",
+        "source_packet_ids",
+        "source_record_ids",
+        "corpus_entry_ids",
+        "distillation_queue_ids",
+        "method_claim_ids",
+        "calibration_row_ids",
+        "report_id",
+        "replay_status",
+        "boundary_controls",
+        "review_notes",
+    }
+    missing_replay_required = sorted(
+        replay_required - required_fields("manual_case_replay_packet")
+    )
+    validator.check(
+        not missing_replay_required,
+        "manual case replay packet schema replay required fields",
+        ", ".join(missing_replay_required),
+    )
+
+    source_packet_required = {
+        "object_type",
+        "source_packet_id",
+        "source_packet_version",
+        "source_locator_list",
+        "source_type_list",
+        "acquisition_method",
+        "permission_basis",
+        "excerpt_boundary_note",
+        "attribution_note",
+        "disallowed_use",
+        "reviewer_note",
+        "status",
+        "boundary_controls",
+    }
+    missing_source_packet_required = sorted(
+        source_packet_required - required_fields("manual_source_packet")
+    )
+    validator.check(
+        not missing_source_packet_required,
+        "manual case replay packet schema source packet required fields",
+        ", ".join(missing_source_packet_required),
+    )
+
+    boundary_required = {
+        "no_x_scraping",
+        "no_twscrape",
+        "no_external_api",
+        "no_secrets",
+        "no_real_serenity_text",
+        "no_corpus_data",
+        "no_real_method_claims",
+        "no_real_toc_calibration",
+        "no_real_company_conclusion",
+        "no_real_investment_report",
+        "no_investment_advice",
+    }
+    missing_boundary_required = sorted(
+        boundary_required - required_fields("boundary_controls")
+    )
+    validator.check(
+        not missing_boundary_required,
+        "manual case replay packet schema required boundary controls",
+        ", ".join(missing_boundary_required),
+    )
+
+    example_keys: list[str] = []
+
+    def collect_example_keys(value: object, location: str = "$") -> None:
+        if isinstance(value, dict):
+            for key, child in value.items():
+                child_location = f"{location}.{key}"
+                if key.casefold() in {"example", "examples"}:
+                    example_keys.append(child_location)
+                collect_example_keys(child, child_location)
+        elif isinstance(value, list):
+            for index, child in enumerate(value):
+                collect_example_keys(child, f"{location}[{index}]")
+
+    collect_example_keys(data)
+    validator.check(
+        not example_keys,
+        "manual case replay packet schema contains no example keys",
+        ", ".join(example_keys),
+    )
+
+    prohibited_terms = [
+        "twscrape_config",
+        "api_key",
+        "access_token",
+        "session_cookie",
+        "cookie_export",
+        "session_capture",
+        "scraped_archive",
+        "private_leak",
+        "login_wall_bypass",
+        "buy_rating",
+        "sell_rating",
+        "target_price_value",
+        "position_size_value",
+    ]
+    serialized_schema = json.dumps(data, ensure_ascii=False).casefold()
+    found_prohibited_terms = [
+        term for term in prohibited_terms if term in serialized_schema
+    ]
+    validator.check(
+        not found_prohibited_terms,
+        "manual case replay packet schema prohibited term scan",
+        ", ".join(found_prohibited_terms),
+    )
+
+
 def validate_markdown_links(validator: Validator) -> None:
     missing: list[str] = []
     link_pattern = re.compile(r"!?\[[^\]]*\]\(([^)]+)\)")
@@ -687,6 +900,7 @@ def main() -> int:
     validate_evidence_schema(validator)
     validate_prompt_pack(validator)
     validate_scorecard(validator)
+    validate_manual_case_replay_packet_schema(validator)
     validate_markdown_links(validator)
     validate_public_placeholders(validator)
     validate_high_risk_language(validator)
