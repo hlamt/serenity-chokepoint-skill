@@ -1,7 +1,7 @@
 ---
 name: serenity-chokepoint-skill
 description: Guide evidence-backed Serenity-style supply-chain chokepoint research. Use for supply-chain chokepoint scans, chokepoint vs dependency vs local bottleneck vs TOC-style constraint distinctions, firm value capture, shareholder capture, false-positive and invalidation review, source-governance discipline, and no-investment-advice boundary enforcement.
-version: 1.1.0-alpha.3
+version: 1.1.0-alpha.4
 ---
 
 # Purpose
@@ -33,30 +33,18 @@ This Skill produces a research hypothesis, not investment advice.
 
 # User-Facing Language Rule
 
-Use internal checks silently. Do not mention V1.1A, V1.1B, registry IDs, runtime method checks, or check numbers in user-facing answers unless the user explicitly asks about Skill internals.
+Use internal rules silently; answer users with direct reasoning.
 
-Translate internal checks into natural reasoning. Explain why a conclusion cannot be made instead of saying "the rules say so".
+When a conclusion cannot be made, explain the business reason rather than citing versions, checks, registries, framework rules, or this Skill.
 
-Do not lead user-facing answers with framework or rule-attribution language such as:
+When listing companies, frame them as research candidates grouped by value-chain layer, evidence strength, and control-point hypothesis. Do not present them as recommendations, winner rankings, or investment rankings.
 
-- 按 Serenity 规则
-- 按 Chokepoint 规则
-- 按本 Skill 规则
-- 按框架
-- according to Serenity rules
-- according to this Skill
-- according to the framework
-
-Instead, start with the direct business reasoning.
-
-Prefer user-facing language such as:
+Use plain research language. Prefer:
 
 - "不能直接认定。原因是..."
 - "这里只能先看作候选研究对象，而不是买入名单或公司排名。"
+- "以下是研究对象分组，不是投资吸引力排序。"
 - "进入供应链说明它参与了相关层级，但还没有证明它控制了难替代环节、能捕获公司层面的经济价值，更没有证明当前普通股股东能分享这种价值。"
-- "以下顺序是研究分层，不是投资吸引力排序。"
-- "不能直接认定谁控制关键环节。更合理的做法是把它们分成几类控制点候选，再逐一验证客户认证、替代难度、交付影响、经济价值捕获和股东捕获。"
-- "这里只能先做研究假设。原因是：公司出现在产业链里，只说明它参与了相关层级；还需要证明它有难替代能力、客户认证壁垒、交付影响力、经济价值捕获，以及当前股东能分享这种价值。"
 
 # Minimum Usable Workflow
 
@@ -106,21 +94,18 @@ Use these checks as candidate research checks, not validated method claims.
 
 # Candidate Company Universe Mode
 
-When the user asks which companies are worth studying, produce a candidate research universe. It is acceptable to list real companies or entities when the task is research-universe construction.
+When users ask which companies are worth studying, build a candidate research universe.
 
-Label the list as research candidates, candidate research universe, 候选研究对象, 研究池, or control-point candidates. Do not frame it as a recommendation list, buy list, winner ranking, investment-attractiveness ranking, or best-stock list.
+List companies by value-chain layer and control-point hypothesis. For each company or entity, include:
 
-Separate:
-
-- layer participation
-- possible control point
-- firm value capture
-- shareholder capture
+- public / private / subsidiary status when relevant
+- why it is relevant
 - evidence needed
 - firm value-capture risk
 - shareholder-capture risk
+- current research status
 
-State that ordering is research grouping or evidence priority, not investment ranking. For every company or entity, include the public/private/subsidiary status when relevant and keep `current status` to research language such as `research candidate`, `needs evidence`, `evidence insufficient`, `exclude for now`, or `watchlist only`.
+Keep the list as research candidates, not recommendations or rankings.
 
 # Required Output Behavior
 

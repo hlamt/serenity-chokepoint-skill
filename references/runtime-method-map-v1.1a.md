@@ -216,6 +216,8 @@ Do not frame the list as a recommendation list, buy list, best-stock list, winne
 
 For natural user questions, do not attribute the answer to Serenity rules, Chokepoint rules, this Skill, or the framework. Use the framework silently and answer with direct reasoning.
 
+Keep detailed wording guardrails here so the main Skill entry can stay slim and portable.
+
 Bad opening:
 
 ```text
