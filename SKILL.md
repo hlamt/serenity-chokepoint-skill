@@ -1,7 +1,7 @@
 ---
 name: serenity-chokepoint-skill
 description: Guide evidence-backed Serenity-style supply-chain chokepoint research. Use for supply-chain chokepoint scans, chokepoint vs dependency vs local bottleneck vs TOC-style constraint distinctions, firm value capture, shareholder capture, false-positive and invalidation review, source-governance discipline, and no-investment-advice boundary enforcement.
-version: 1.1.0-alpha.1
+version: 1.1.0-alpha.2
 ---
 
 # Purpose
@@ -30,6 +30,19 @@ This Skill produces a research hypothesis, not investment advice.
 - Do not use private, unauthorized, non-traceable, or unclear-provenance information.
 - Do not infer certainty from one source, price move, screenshot, X post, community summary, or popular narrative.
 - Do not simulate Serenity, claim official Serenity endorsement, or infer Serenity's private intent.
+
+# User-Facing Language Rule
+
+Use internal checks silently. Do not mention V1.1A, V1.1B, registry IDs, runtime method checks, or check numbers in user-facing answers unless the user explicitly asks about Skill internals.
+
+Translate internal checks into natural reasoning. Explain why a conclusion cannot be made instead of saying "the rules say so".
+
+Prefer user-facing language such as:
+
+- "不能直接认定。原因是..."
+- "这里只能先看作候选研究对象，而不是买入名单或公司排名。"
+- "进入供应链说明它参与了相关层级，但还没有证明它控制了难替代环节、能捕获公司层面的经济价值，更没有证明当前普通股股东能分享这种价值。"
+- "以下顺序是研究分层，不是投资吸引力排序。"
 
 # Minimum Usable Workflow
 
@@ -73,8 +86,27 @@ Use these checks as candidate research checks, not validated method claims.
 - If the user asks for an industry chokepoint scan, use checks 1 and 5.
 - If the user asks whether a company benefits from a chokepoint, use checks 2 and 3.
 - If the user asks about upstream materials, suppliers, capacity, qualification, substitution, or repeated upstream appearance, use checks 1 and 5.
+- If the user asks which companies are worth studying, worth watching, possibly chokepoint-relevant, more likely to control key links, representative companies, or candidate research pool, use Candidate Company Universe Mode.
 - If the user provides a source, X post, screenshot, community interpretation, or translated explanation, use check 4 before using the content.
 - If the user asks for trade action, target price, position size, expected return, or portfolio allocation, refuse investment advice and redirect to a research hypothesis framework.
+
+# Candidate Company Universe Mode
+
+When the user asks which companies are worth studying, produce a candidate research universe. It is acceptable to list real companies or entities when the task is research-universe construction.
+
+Label the list as research candidates, candidate research universe, 候选研究对象, 研究池, or control-point candidates. Do not frame it as a recommendation list, buy list, winner ranking, investment-attractiveness ranking, or best-stock list.
+
+Separate:
+
+- layer participation
+- possible control point
+- firm value capture
+- shareholder capture
+- evidence needed
+- firm value-capture risk
+- shareholder-capture risk
+
+State that ordering is research grouping or evidence priority, not investment ranking. For every company or entity, include the public/private/subsidiary status when relevant and keep `current status` to research language such as `research candidate`, `needs evidence`, `evidence insufficient`, `exclude for now`, or `watchlist only`.
 
 # Required Output Behavior
 

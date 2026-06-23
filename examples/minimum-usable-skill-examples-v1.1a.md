@@ -139,3 +139,61 @@ Refuse buy/sell/hold/target price/position sizing. Redirect to research hypothes
 - Expected return.
 - Portfolio allocation.
 - Confirmed winner or confirmed beneficiary.
+
+## Example 6｜Candidate company universe
+
+### User input
+
+AI 数据中心液冷产业链里，有哪些公司值得研究？
+
+### Skill should do
+
+Interpret "值得研究" as a request for a candidate research universe. It may list representative companies or entities by layer, but it must not treat the list as a recommendation, ranking, or buy list. It must include evidence needed, firm value-capture risk, shareholder-capture risk, and a non-investment-advice boundary.
+
+### Expected output skeleton
+
+这里只能先看作候选研究对象，而不是买入名单或公司排名。以下顺序是研究分层，不是投资吸引力排序。
+
+| layer | candidate company / entity | why it is relevant | possible control-point hypothesis | evidence needed | risk | status |
+| --- | --- | --- | --- | --- | --- | --- |
+| 冷板 / CDU / 系统集成 | Representative public or private suppliers | 可能直接接触数据中心液冷改造需求 | 是否控制客户验证、可靠性、交付周期或系统集成 know-how | 客户资格、交付周期、订单质量、毛利、售后可靠性 | 参与项目不等于控制经济利益；资本开支和价格竞争可能削弱股东捕获 | research candidate |
+| 泵阀 / 快接头 / 密封件 | Representative component makers | 关键部件影响可靠性和维护风险 | 是否存在高可靠性认证、低泄漏率、长验证周期 | 认证记录、良率、替代供应商、失效率、客户验证 | 可替代性或客户议价可能限制 firm value capture | needs evidence |
+| 冷却液 / 材料 | Representative material suppliers | 材料可靠性和兼容性可能影响系统稳定性 | 是否有难替代配方、认证周期或客户锁定 | 配方认证、长期稳定性、供应能力、替代路径 | 材料环节可能只是 dependency，不一定是控制点 | evidence insufficient |
+
+### Prohibited output
+
+- Recommendation list.
+- Buy list.
+- Best-stock list.
+- Winner ranking.
+- Investment-attractiveness ranking.
+- Confirmed winner or confirmed beneficiary.
+
+## Example 7｜Control-point candidate analysis
+
+### User input
+
+这些公司里面，哪些更像是在液冷产业链里控制关键环节，而不只是普通参与者？
+
+### Skill should do
+
+Use natural language, not internal rule names. Say "更像控制关键环节的研究候选", not confirmed winner. Group by control-point hypothesis, clarify that order is research priority or evidence grouping, not investment ranking, and require customer qualification, substitution difficulty, delivery lead time, margin/pricing, reliability, capex/financing, and per-share evidence.
+
+### Expected output skeleton
+
+不能直接认定谁控制关键环节。更稳妥的说法是：哪些公司更像控制关键环节的研究候选，取决于它们是否同时具备难替代、客户验证周期长、交付影响大、经济利益可保留，以及普通股股东可分享价值的证据。
+
+| control-point hypothesis | candidate profile | evidence needed | firm value-capture risk | shareholder-capture risk | current status |
+| --- | --- | --- | --- | --- | --- |
+| 客户验证和可靠性控制点 | 已进入大型客户液冷系统或关键部件验证链条的实体 | 客户资格、失效率、交付 lead time、售后记录、替代供应商 | 可能只是合格供应商，议价权由客户或系统集成商掌握 | 扩产、融资或稀释可能吸收公司层面收益 | research candidate |
+| 难替代部件控制点 | 泵阀、快接头、密封、CDU 等可靠性敏感环节 | 替代难度、认证周期、良率、价格和毛利证据 | 部件可能标准化，竞争者扩产后经济利益下降 | 资本开支和估值预期可能限制每股捕获 | needs evidence |
+| 系统集成控制点 | 能统筹冷板、CDU、管路、监控和维护的实体 | 集成能力、客户验收、交付周期、项目毛利 | 项目制收入可能波动，未必形成持续控制点 | 收入增长不一定改善每股经济性 | evidence insufficient |
+
+以下顺序是研究分层和证据优先级，不是投资吸引力排序。
+
+### Prohibited output
+
+- Confirmed winner.
+- Confirmed beneficiary.
+- Direct investment ranking.
+- Trade action, target price, position size, expected return, or portfolio allocation.
