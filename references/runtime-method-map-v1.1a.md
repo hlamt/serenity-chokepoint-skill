@@ -14,6 +14,7 @@ The checks are candidate research checks only. They are not validated method cla
 4. Use the required output skeleton for broad tasks.
 5. Shorten the skeleton only for narrow questions while preserving boundary checks, missing evidence, and invalidation conditions.
 6. Refuse investment-advice requests and redirect to research hypothesis, evidence checklist, risk checklist, invalidation conditions, and monitoring indicators.
+7. Use internal identifiers silently. In user-facing answers, translate checks, registry items, and version labels into natural reasoning unless the user explicitly asks about Skill internals.
 
 ## 3. Method checks
 
@@ -189,9 +190,64 @@ must_not_conclude:
 | Industry chokepoint scan | Check 1, Check 5 | Define research question, system boundary, throughput, value-chain map, candidate chokepoints, evidence needs, false positives, invalidation, and non-investment boundary. |
 | Company chokepoint beneficiary | Check 2, Check 3, optionally Check 5 | Separate layer participation, firm capture, and shareholder capture. Do not call the company a confirmed winner. |
 | Repeated upstream material or supplier as active constraint | Check 1, Check 5 | Distinguish repeated dependency, local bottleneck, supply-chain chokepoint, and TOC-style active constraint. Require boundary, throughput, substitution, capacity, qualification, release, and bypass evidence. |
+| Candidate company universe or representative companies | Candidate Company Universe Mode, Check 2, Check 3, optionally Check 5 | Build a candidate research universe by layer. Label companies as research candidates, not recommendations, and separate layer participation, possible control point, firm capture, and shareholder capture. |
 | Company benefit versus shareholder benefit | Check 3 | Review dilution, financing structure, capital intensity, priced-in expectations, structurally capped upside, and current common-shareholder participation. |
 | Source, X post, screenshot, community interpretation | Check 4 | Label source role, provenance, evidence level, source expression, inference, fact, and open question. |
 | Trade action, price target, sizing, return, allocation | Check 3, Check 4, refusal rule | Refuse investment advice and redirect to research hypothesis, evidence checklist, risk checklist, invalidation conditions, and monitoring indicators. |
+
+# Candidate Company Universe Mode
+
+## User intent
+
+Use this mode when the user asks:
+
+- 有哪些公司值得研究？
+- 哪些公司值得关注？
+- 哪些公司可能在这个产业链里有卡点相关性？
+- 哪些公司更像控制关键环节？
+- 可以列代表公司吗？
+- 哪些公司进入候选研究池？
+
+## Output posture
+
+The output may list real companies or entities when the task is research-universe construction. Frame the list as a candidate research universe, 候选研究对象, 研究池, or control-point candidates.
+
+Do not frame the list as a recommendation list, buy list, best-stock list, winner ranking, or investment-attractiveness ranking.
+
+## Company universe table
+
+| layer | candidate company / entity | public/private/subsidiary status | why it is relevant | possible control-point hypothesis | evidence needed | firm value-capture risk | shareholder-capture risk | current status |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| <value-chain layer> | <company or entity> | <public / private / subsidiary / unclear> | <why it belongs in the research universe> | <possible scarce or hard-to-substitute control point> | <evidence required before upgrading confidence> | <why layer participation may not become firm economics> | <why firm benefit may not reach current common shareholders> | <research candidate / needs evidence / evidence insufficient / exclude for now / watchlist only> |
+
+## Required language
+
+- "这里只能先看作候选研究对象，而不是买入名单或公司排名。"
+- "以下顺序是研究分层，不是投资吸引力排序。"
+- "进入供应链说明它参与了相关层级，但还没有证明它控制了难替代环节、能捕获公司层面的经济价值，更没有证明当前普通股股东能分享这种价值。"
+- "更像控制关键环节" means a control-point candidate, not a confirmed winner.
+
+Allowed `current status` values include:
+
+- research candidate
+- needs evidence
+- evidence insufficient
+- exclude for now
+- watchlist only
+
+## Boundary
+
+Do not use:
+
+- winner
+- confirmed beneficiary
+- buy candidate
+- top pick
+- best stock
+- recommendation list
+- investment-attractiveness ranking
+
+Candidate universe output must include evidence needed, firm value-capture risk, shareholder-capture risk, and a non-investment-advice boundary.
 
 ## 5. Required output skeleton
 

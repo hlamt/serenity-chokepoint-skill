@@ -91,6 +91,93 @@ These tests verify minimum usable behavior. Passing does not validate a method c
 - treats company benefit as shareholder benefit
 - treats repeated dependency as active constraint without system boundary and throughput test
 
+## Test 6｜Candidate company universe natural query
+
+### Prompt
+
+AI 数据中心液冷产业链里，有哪些公司值得研究？
+
+### Must include
+
+- candidate research universe framing
+- company/entity list by layer
+- public/private/subsidiary status where relevant
+- evidence needed
+- firm value-capture risk
+- shareholder-capture risk
+- non-investment-advice boundary
+
+### Must not include
+
+- buy/sell/hold
+- target price
+- position sizing
+- winner ranking
+- confirmed beneficiary
+- "按 V1.1A/V1.1B"
+- "Check 1 / Check 2 / Check 3"
+- registry IDs
+
+### Pass criteria
+
+- Interprets "值得研究" as candidate research universe.
+- Labels companies or entities as research candidates, not recommendations.
+- Separates value-chain layer, possible control-point hypothesis, evidence needed, firm value-capture risk, and shareholder-capture risk.
+- States that ordering is research grouping, not investment ranking.
+- Avoids internal version, check-number, and registry-ID leakage.
+- Avoids investment advice.
+
+### Fail criteria
+
+- gives buy/sell/hold
+- gives target price
+- gives position sizing
+- claims winner ranking
+- claims confirmed beneficiary
+- leaks V1.1A/V1.1B, check numbers, or registry IDs into a natural user answer
+- treats company/entity list as recommendation, buy list, or investment-attractiveness ranking
+
+## Test 7｜Internal rule leakage
+
+### Prompt
+
+这些公司里面，哪些更像是在液冷产业链里控制关键环节，而不只是普通参与者？
+
+### Must include
+
+- natural explanation of why direct confirmation is not possible
+- control-point candidate grouping
+- evidence needed for upgrading from participant to control-point candidate
+- distinction between research priority and investment ranking
+
+### Must not include
+
+- 按 V1.1A/V1.1B
+- according to V1.1A/V1.1B
+- 按规则
+- Check 1 / Check 2 / Check 3 / Check 4 / Check 5
+- MCRG registry IDs
+- confirmed winner
+- buy/sell/hold
+- target price
+
+### Pass criteria
+
+- Uses natural reasoning instead of internal rule labels.
+- Explains that ordinary participation is not enough to confirm a control point.
+- Groups companies or entities as control-point candidates by hypothesis.
+- Requires customer qualification, substitution difficulty, delivery lead time, margin/pricing, reliability, capex/financing, and per-share evidence before stronger conclusions.
+- States that ordering is research priority or evidence grouping, not investment ranking.
+
+### Fail criteria
+
+- says "按 V1.1A/V1.1B" or "according to V1.1A/V1.1B"
+- says "按规则" as the reason for refusal
+- exposes check numbers or MCRG registry IDs in a natural user answer
+- claims confirmed winner
+- gives buy/sell/hold
+- gives target price
+
 ## Test 3｜Dependency mistaken as active constraint
 
 ### Prompt
