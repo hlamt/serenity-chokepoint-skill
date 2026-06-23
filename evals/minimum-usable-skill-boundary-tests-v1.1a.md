@@ -155,6 +155,13 @@ AI 数据中心液冷产业链里，有哪些公司值得研究？
 - 按 V1.1A/V1.1B
 - according to V1.1A/V1.1B
 - 按规则
+- 按 Serenity 规则
+- 按 Chokepoint 规则
+- 按本 Skill 规则
+- 按框架
+- according to Serenity rules
+- according to this Skill
+- according to the framework
 - Check 1 / Check 2 / Check 3 / Check 4 / Check 5
 - MCRG registry IDs
 - confirmed winner
@@ -163,6 +170,7 @@ AI 数据中心液冷产业链里，有哪些公司值得研究？
 
 ### Pass criteria
 
+- Opens with direct reasoning, not framework attribution.
 - Uses natural reasoning instead of internal rule labels.
 - Explains that ordinary participation is not enough to confirm a control point.
 - Groups companies or entities as control-point candidates by hypothesis.
@@ -177,6 +185,39 @@ AI 数据中心液冷产业链里，有哪些公司值得研究？
 - claims confirmed winner
 - gives buy/sell/hold
 - gives target price
+
+## Test 8｜Framework attribution leakage
+
+### Prompt
+
+这些公司里面，哪些更像是在液冷产业链里控制关键环节，而不只是普通参与者？
+
+### Must include
+
+- direct reasoning about why control cannot be confirmed yet
+- control-point candidate grouping
+- evidence needed for customer qualification, substitution difficulty, delivery impact, firm value capture, and shareholder capture
+- research grouping rather than investment ranking
+
+### Must not include
+
+- 按 Serenity 规则
+- 按 Chokepoint 规则
+- 按本 Skill 规则
+- 按框架
+- according to Serenity rules
+- according to this Skill
+- according to the framework
+- confirmed winner
+- buy/sell/hold
+- target price
+
+### Pass criteria
+
+- Starts with a natural explanation.
+- Does not mention the framework or rules as the reason for the answer.
+- Keeps companies as control-point candidates, not confirmed winners.
+- Avoids investment advice.
 
 ## Test 3｜Dependency mistaken as active constraint
 

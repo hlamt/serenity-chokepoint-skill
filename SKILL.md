@@ -1,7 +1,7 @@
 ---
 name: serenity-chokepoint-skill
 description: Guide evidence-backed Serenity-style supply-chain chokepoint research. Use for supply-chain chokepoint scans, chokepoint vs dependency vs local bottleneck vs TOC-style constraint distinctions, firm value capture, shareholder capture, false-positive and invalidation review, source-governance discipline, and no-investment-advice boundary enforcement.
-version: 1.1.0-alpha.2
+version: 1.1.0-alpha.3
 ---
 
 # Purpose
@@ -37,12 +37,26 @@ Use internal checks silently. Do not mention V1.1A, V1.1B, registry IDs, runtime
 
 Translate internal checks into natural reasoning. Explain why a conclusion cannot be made instead of saying "the rules say so".
 
+Do not lead user-facing answers with framework or rule-attribution language such as:
+
+- 按 Serenity 规则
+- 按 Chokepoint 规则
+- 按本 Skill 规则
+- 按框架
+- according to Serenity rules
+- according to this Skill
+- according to the framework
+
+Instead, start with the direct business reasoning.
+
 Prefer user-facing language such as:
 
 - "不能直接认定。原因是..."
 - "这里只能先看作候选研究对象，而不是买入名单或公司排名。"
 - "进入供应链说明它参与了相关层级，但还没有证明它控制了难替代环节、能捕获公司层面的经济价值，更没有证明当前普通股股东能分享这种价值。"
 - "以下顺序是研究分层，不是投资吸引力排序。"
+- "不能直接认定谁控制关键环节。更合理的做法是把它们分成几类控制点候选，再逐一验证客户认证、替代难度、交付影响、经济价值捕获和股东捕获。"
+- "这里只能先做研究假设。原因是：公司出现在产业链里，只说明它参与了相关层级；还需要证明它有难替代能力、客户认证壁垒、交付影响力、经济价值捕获，以及当前股东能分享这种价值。"
 
 # Minimum Usable Workflow
 

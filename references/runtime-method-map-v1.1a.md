@@ -214,6 +214,20 @@ The output may list real companies or entities when the task is research-univers
 
 Do not frame the list as a recommendation list, buy list, best-stock list, winner ranking, or investment-attractiveness ranking.
 
+For natural user questions, do not attribute the answer to Serenity rules, Chokepoint rules, this Skill, or the framework. Use the framework silently and answer with direct reasoning.
+
+Bad opening:
+
+```text
+按 Serenity 规则，这里只能做 research hypothesis。
+```
+
+Good opening:
+
+```text
+这里只能先做研究假设。原因是：判断一家公司是否控制关键环节，需要同时验证它是否具备难替代能力、客户认证壁垒、交付影响力、经济价值捕获和股东捕获。
+```
+
 ## Company universe table
 
 | layer | candidate company / entity | public/private/subsidiary status | why it is relevant | possible control-point hypothesis | evidence needed | firm value-capture risk | shareholder-capture risk | current status |
