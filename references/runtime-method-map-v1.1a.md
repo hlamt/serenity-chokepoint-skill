@@ -6,6 +6,8 @@ This map converts the V1.0N candidate method registry into minimum usable runtim
 
 The checks are candidate research checks only. They are not validated method claims, not completed TOC calibration, not runtime-ready method claims, not company conclusions, and not investment advice.
 
+For the V1.3 Chokepoint Theory core, use `references/chokepoint-theory-core-v1.3a.md` as the method-core reference.
+
 ## 2. How to use this map
 
 1. Classify the user task before answering.
