@@ -1,7 +1,7 @@
 ---
 name: serenity-chokepoint-skill
 description: Guide evidence-backed Serenity-style supply-chain chokepoint research. Use for supply-chain chokepoint scans, chokepoint vs dependency vs local bottleneck vs TOC-style constraint distinctions, firm value capture, shareholder capture, false-positive and invalidation review, source-governance discipline, and no-investment-advice boundary enforcement.
-version: 1.1.0-alpha.4
+version: 1.3.0-alpha.1
 ---
 
 # Purpose
@@ -76,6 +76,8 @@ At each step, separate observed facts, source expression, user interpretation, a
 # Runtime Method Checks
 
 Use these checks as candidate research checks, not validated method claims.
+
+For Chokepoint Theory core method definitions, operational process, validation signals, invalidation signals, and source hierarchy, use `references/chokepoint-theory-core-v1.3a.md`.
 
 1. **Physical mapping as hypothesis formation.** Use physical supply-chain mapping to form a hypothesis, then require system boundary, throughput impact, substitution, qualification, capacity, and evidence tests before stronger constraint language.
 2. **Firm value-capture separation.** Separate participation in a chokepoint-relevant layer from firm-level value capture; test control point, technical depth, margin structure, integration position, bargaining power, and where economics accrue.
@@ -199,8 +201,9 @@ State that the output is a research hypothesis for methodology learning and is n
 
 # References
 
+- Use `references/chokepoint-theory-core-v1.3a.md` for Chokepoint Theory core method definitions, operational process, validation signals, invalidation signals, and source hierarchy.
 - Use `references/runtime-method-map-v1.1a.md` for detailed check schema, task routing, output skeleton, and prohibited outputs.
-- Use `examples/minimum-usable-skill-examples-v1.1a.md` for the five minimum usable task examples.
+- Use `examples/minimum-usable-skill-examples-v1.1a.md` for minimum usable task examples.
 - Use `evals/minimum-usable-skill-boundary-tests-v1.1a.md` for boundary tests.
 - Use `references/serenity-source-policy.md`, `references/source-types.md`, and `references/evidence-ladder.md` for source labeling and evidence strength.
 - Use `references/concept-boundary.md`, `references/toc-comparison.md`, and `references/translation-policy.md` when terminology is disputed or ambiguous.
